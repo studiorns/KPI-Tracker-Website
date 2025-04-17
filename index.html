@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website KPI Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* SONER Logo Animation */
+        @keyframes sonerScan { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes sonerBlip { 0%, 20%, 100% { opacity: 0; } 2%, 15% { opacity: 1; } 3% { transform: scale(1.2); } }
+        
+        /* SONER Logo styles */
+        .soner-logo { display: flex; align-items: center; color: white; font-family: 'Inter', sans-serif; font-size: 28px; font-weight: 300; }
+        .soner-radar { width: 24px; height: 24px; border-radius: 50%; border: 1px solid white; margin: 0 3px; position: relative; background-color: rgba(255, 255, 255, 0.05); overflow: hidden; }
+        .soner-scanner { position: absolute; top: 0; left: 0; width: 100%; height: 100%; animation: sonerScan 4s linear infinite; transform-origin: center; }
+        .soner-scanner::before { content: ''; position: absolute; top: 0; left: 50%; width: 50%; height: 50%; background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4)); transform-origin: bottom left; clip-path: polygon(0 0, 100% 0, 0 100%); }
+        .soner-scanner::after { content: ''; position: absolute; top: 0; left: 50%; width: 50%; height: 1px; background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 1)); transform-origin: left center; box-shadow: 0 0 4px rgba(255, 255, 255, 0.8); }
+        .soner-blip { position: absolute; width: 2px; height: 2px; background-color: white; border-radius: 50%; opacity: 0; box-shadow: 0 0 4px white; }
+        .soner-blip:nth-child(1) { top: 25%; left: 30%; animation: sonerBlip 4s 1s infinite; }
+        .soner-blip:nth-child(2) { top: 65%; left: 60%; animation: sonerBlip 4s 2.5s infinite; }
+        .soner-tagline { color: white; font-size: 8px; text-transform: uppercase; font-weight: 500; letter-spacing: 0.5em; margin-left: 10px; opacity: 0.8; }
+
+        :root {
+            --primary: #4285f4;
+            --primary-light: #1a2233;
+            --primary-dark: #8ab4f8;
+            --secondary: #34a853;
+            --secondary-light: #1a2a1e;
+            --warning: #fbbc04;
+            --warning-light: #332a1a;
+            --danger: #ea4335;
+            --danger-light: #331f1e;
+            --gray-100: #1e1e1e;
+            --gray-200: #2d2d2d;
+            --gray-300: #3d3d3d;
+            --gray-400: #4d4d4d;
+            --gray-500: #777777;
+            --gray-600: #a0a0a0;
+            --gray-700: #c0c0c0;
+            --gray-800: #e0e0e0;
+            --gray-900: #f0f0f0;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 15px 25px rgba(0, 0, 0, 0.6);
+            --radius-sm: 4px;
+            --radius: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --transition: all 0.3s ease;
+            --bg-color: #000000;
+            --card-bg: #121212;
+            --section-bg: #181818;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--gray-800);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a73e8 0%, #174ea6 100%);
+            color: white;
+            padding: 32px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0MCIgaGVpZ2h0PSI0MDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSIxMDAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiIGlkPSJhIj48c3RvcCBzdG9wLWNvbG9yPSIjRkZGIiBzdG9wLW9wYWNpdHk9Ii4wNSIgb2Zmc2V0PSIwJSIvPjxzdG9wIHN0b3AtY29sb3I9IiNGRkYiIHN0b3Atb3BhY2l0eT0iLjAyIiBvZmZzZXQ9IjEwMCUiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cGF0aCBkPSJNMTQ0MCAyMDBjLTEzMS44LTEyLjktMjY3LjgtMTkuNC00MDgtMTkuNC0xNDAuMiAwLTI3Ni4yIDYuNS00MDggMTkuNFYwaDgxNnYyMDB6IiBmaWxsPSJ1cmwoI2EpIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48L3N2Zz4=');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 0;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--gray-900);
+        }
+        
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.35rem;
+            margin-bottom: 1rem;
+        }
+        
+        h4 {
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-section {
+            background-color: var(--section-bg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow);
+            padding: 28px;
+            margin-bottom: 32px;
+            transition: var(--transition);
+            border: 1px solid var(--gray-300);
+        }
+        
+        .dashboard-section:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .dashboard-section h2 {
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 16px;
+            margin-bottom: 28px;
+            color: var(--gray-900);
+            font-size: 1.5rem;
+        }
+        
+        .dashboard-section h2 i {
+            margin-right: 12px;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        .metric-card {
+            background-color: var(--gray-100);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .metric-card:hover::before {
+            opacity: 1;
+        }
+        
+        /* Total Metric Cards */
+        .total-metric-card {
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+            border: 1px solid var(--primary);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .total-metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--primary);
+            opacity: 1;
+        }
+        
+        .total-metric-card .metric-name {
+            color: var(--primary-dark);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        
+        .total-metric-card .metric-value {
+            font-size: 2.5rem;
+            color: white;
+        }
+        
+        .total-metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(66, 133, 244, 0.25);
+        }
+        
+        /* YTD Metric Cards */
+        .ytd-metric-card {
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+            border: 1px solid var(--secondary);
+            box-shadow: 0 4px 12px rgba(52, 168, 83, 0.15);
+        }
+        
+        .ytd-metric-card::before {
+            background-color: var(--secondary);
+        }
+        
+        .ytd-metric-card .metric-name {
+            color: var(--secondary);
+        }
+        
+        .ytd-metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(52, 168, 83, 0.25);
+        }
+        
+        .metric-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .metric-name i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+        
+        .metric-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .metric-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+        
+        .stat-label {
+            color: var(--gray-600);
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .positive { 
+            background-color: var(--secondary-light); 
+            color: var(--secondary);
+        }
+        
+        .negative { 
+            background-color: var(--danger-light); 
+            color: var(--danger);
+        }
+        
+        .warning {
+            background-color: var(--warning-light);
+            color: var(--warning);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            margin-bottom: 28px;
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            border: 1px solid var(--gray-300);
+            transition: var(--transition);
+        }
+        
+        .chart-container:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Charts row for horizontal layout */
+        .charts-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .charts-row .chart-container {
+            flex: 1;
+            min-width: 300px;
+            margin-bottom: 0;
+        }
+        
+        .tab-container {
+            margin-top: 24px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid var(--gray-300);
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray-600);
+            border-radius: var(--radius) var(--radius) 0 0;
+            transition: var(--transition);
+            position: relative;
+            font-size: 0.95rem;
+        }
+        
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+        
+        .tab-btn.active {
+            color: var(--primary);
+        }
+        
+        .tab-btn.active::after {
+            transform: scaleX(1);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 8px 0 24px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .insight-summary {
+            background-color: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 20px 24px;
+            margin-bottom: 28px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            position: relative;
+        }
+        
+        .insight-summary::before {
+            content: '\f0eb';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            font-size: 1.5rem;
+            color: var(--primary);
+            opacity: 0.2;
+        }
+        
+        .insight-summary h3 {
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .insight-summary h3 i {
+            margin-right: 10px;
+        }
+        
+        .insight-summary p {
+            margin: 0;
+            color: var(--gray-800);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        
+        .print-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+        
+        .print-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 6px 16px rgba(26, 115, 232, 0.5);
+        }
+        
+        /* Section Collapsible Styles */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 16px;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            color: var(--gray-900);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .section-title i {
+            margin-right: 12px;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+        
+        .section-content {
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.8s ease, opacity 0.5s ease;
+            opacity: 1;
+        }
+        
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        
+        .section-toggle {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+        
+        .section-toggle:hover {
+            background-color: rgba(66, 133, 244, 0.1);
+            transform: scale(1.1);
+        }
+        
+        .section-toggle:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
+        }
+        
+        .section-toggle i {
+            transition: transform 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .section-toggle.collapsed i {
+            transform: rotate(-180deg);
+        }
+        
+        /* Skeleton Loader */
+        .skeleton {
+            background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .metric-card .metric-value.skeleton {
+            height: 40px;
+            width: 100px;
+            border-radius: var(--radius-sm);
+        }
+        
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-buttons {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                text-align: left;
+                padding: 12px;
+                border-radius: 0;
+            }
+            
+            .print-btn {
+                bottom: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                right: 20px;
+            }
+            
+            .container {
+                padding: 0 16px;
+            }
+            
+            .dashboard-section {
+                padding: 20px;
+                margin-bottom: 24px;
+            }
+            
+            .chart-container {
+                height: 350px;
+                padding: 16px;
+            }
+            
+            /* Stack charts vertically on mobile */
+            .charts-row {
+                flex-direction: column;
+            }
+            
+            .charts-row .chart-container {
+                width: 100%;
+                margin-bottom: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dashboard-section h2 {
+                font-size: 1.3rem;
+            }
+            
+            .metric-value {
+                font-size: 1.6rem;
+            }
+            
+            .chart-container {
+                height: 300px;
+                padding: 12px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+            }
+            
+            .dashboard-section {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+            
+            .print-btn {
+                display: none;
+            }
+            
+            .tab-content {
+                display: block !important;
+            }
+            
+            .tab-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
+                <a href="https://studiorns.github.io/KPI-Tracker-Repository/" style="text-decoration: none; color: inherit;">
+                    <div class="soner-logo">
+                        S<div class="soner-radar">
+                            <div class="soner-scanner"></div>
+                            <div class="soner-blip"></div>
+                            <div class="soner-blip"></div>
+                        </div>NER
+                        <span class="soner-tagline">Visual Intelligence</span>
+                    </div>
+                </a>
+            </div>
+            <h1>Website KPI Dashboard</h1>
+            <p>Q1 2025 Performance Analysis</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-chart-pie"></i> Total Metrics</h2>
+                <button class="section-toggle" aria-label="Toggle section" aria-expanded="true">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            <div class="section-content">
+                <div class="insight-summary">
+                    <h3><i class="fas fa-lightbulb"></i> Total Performance</h3>
+                    <p>Aggregated metrics across Website initiatives showing total sessions, pageviews, average session duration, and engagement rate with comparisons to forecast, MoM, and YTD performance.</p>
+                </div>
+                
+                <div class="metrics-grid" id="total-metrics-container">
+                    <!-- Total metric cards will be dynamically populated here -->
+                    <div class="metric-card">
+                        <div class="metric-name"><i class="fas fa-spinner fa-spin"></i> Loading total metrics...</div>
+                        <div class="metric-value">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Performance Overview</h2>
+                <button class="section-toggle" aria-label="Toggle section" aria-expanded="true">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            <div class="section-content">
+            <div class="insight-summary">
+                <h3><i class="fas fa-lightbulb"></i> Key Insights</h3>
+                <p>Website metrics are performing well in Q1 2025. Total Sessions exceeded forecast by 338.4% in March, while Pageviews are also significantly above forecast at 381.4% of target. Average Session Duration is slightly below forecast at 71.7% of target, and Engagement Rate is slightly below forecast at 98.3% of target.</p>
+            </div>
+            
+            <div class="metrics-grid" id="metrics-container">
+                <!-- Metric cards will be dynamically populated here -->
+                <div class="metric-card">
+                    <div class="metric-name"><i class="fas fa-spinner fa-spin"></i> Loading metrics...</div>
+                    <div class="metric-value">-</div>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-section" id="monthly-trends">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Monthly Trends</h2>
+                <button class="section-toggle" aria-label="Toggle section" aria-expanded="true">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            <div class="section-content">
+            
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="total-sessions">Total Sessions</button>
+                    <button class="tab-btn" data-tab="pageviews">Pageviews</button>
+                    <button class="tab-btn" data-tab="avg-session-duration">Avg Session Duration</button>
+                    <button class="tab-btn" data-tab="engagement-rate">Engagement Rate</button>
+                </div>
+                
+                <div class="tab-content active" id="total-sessions-tab">
+                    <div class="chart-container">
+                        <canvas id="total-sessions-trend-chart" data-lazy="true"></canvas>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="pageviews-tab">
+                    <div class="chart-container">
+                        <canvas id="pageviews-trend-chart" data-lazy="true"></canvas>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="avg-session-duration-tab">
+                    <div class="chart-container">
+                        <canvas id="avg-session-duration-trend-chart" data-lazy="true"></canvas>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="engagement-rate-tab">
+                    <div class="chart-container">
+                        <canvas id="engagement-rate-trend-chart" data-lazy="true"></canvas>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-section" id="ytd-achievement">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-bullseye"></i> YTD Achievement</h2>
+                <button class="section-toggle" aria-label="Toggle section" aria-expanded="true">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            <div class="section-content">
+                <div class="chart-container">
+                    <canvas id="ytd-achievement-chart" data-lazy="true"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-section" id="initiative-details">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-chart-bar"></i> Initiative Details</h2>
+                <button class="section-toggle" aria-label="Toggle section" aria-expanded="true">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            <div class="section-content">
+            
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="website">Website</button>
+                </div>
+                
+                <div class="tab-content active" id="website-tab">
+                    <h3>Website Performance</h3>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="initiative-cards-website-total-sessions-chart" data-lazy="true"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="initiative-cards-website-pageviews-chart" data-lazy="true"></canvas>
+                        </div>
+                    </div>
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <canvas id="initiative-cards-website-avg-session-duration-chart" data-lazy="true"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="initiative-cards-website-engagement-rate-chart" data-lazy="true"></canvas>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer style="background-color: var(--gray-100); color: var(--gray-700); padding: 20px 0; text-align: center; border-top: 1px solid var(--gray-300); margin-top: 40px;">
+        <div class="container">
+            <p>© 2025 Research & Insights Unit | Strategic Marketing & Communications | Department of Culture and Tourism – Abu Dhabi</p>
+        </div>
+    </footer>
+    
+    <button class="print-btn" title="Print Dashboard" id="print-dashboard">
+        <i class="fas fa-print"></i>
+    </button>
+    
+    <!-- CSV Data -->
+    <script>
+        // CSV data embedded directly to avoid CORS issues with local files
+        const csvData = `﻿Key,Initiative Cards,Sub Initiative,Metric,Month,Actual,Forecast,YTD Actual Totals,YTD Forecast Totals,,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-January,Campaigns,Website,Total Sessions,January,"4,893,609","4,279,800","4,893,609","4,279,800",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-February,Campaigns,Website,Total Sessions,February,"5,770,132","3,064,721","10,663,741","7,344,521",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-March,Campaigns,Website,Total Sessions,March,"12,690,710","2,893,378","23,354,451","10,237,899",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-April,Campaigns,Website,Total Sessions,April,,"2,170,257","23,354,451","12,408,156",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-May,Campaigns,Website,Total Sessions,May,,"4,589,257","23,354,451","16,997,413",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-June,Campaigns,Website,Total Sessions,June,,"15,625,576","23,354,451","32,622,989",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-July,Campaigns,Website,Total Sessions,July,,"12,091,908","23,354,451","44,714,897",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-August,Campaigns,Website,Total Sessions,August,,"9,009,597","23,354,451","53,724,494",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-September,Campaigns,Website,Total Sessions,September,,"6,932,564","23,354,451","60,657,058",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-October,Campaigns,Website,Total Sessions,October,,"21,054,665","23,354,451","81,711,723",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-November,Campaigns,Website,Total Sessions,November,,"23,915,588","23,354,451","105,627,311",,,,,,,,,,,,,,
+Campaigns-Website-Total Sessions-December,Campaigns,Website,Total Sessions,December,,"12,668,764","23,354,451","118,296,075",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-January,Campaigns,Website,Pageviews,January,"5,603,654","5,898,822","5,603,654","5,898,822",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-February,Campaigns,Website,Pageviews,February,"6,659,247","4,195,545","12,262,901","10,094,367",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-March,Campaigns,Website,Pageviews,March,"14,795,011","3,878,884","27,057,912","13,973,251",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-April,Campaigns,Website,Pageviews,April,,"2,849,490","27,057,912","16,822,741",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-May,Campaigns,Website,Pageviews,May,,"5,740,308","27,057,912","22,563,049",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-June,Campaigns,Website,Pageviews,June,,"17,253,502","27,057,912","39,816,551",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-July,Campaigns,Website,Pageviews,July,,"12,224,496","27,057,912","52,041,047",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-August,Campaigns,Website,Pageviews,August,,"11,306,941","27,057,912","63,347,988",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-September,Campaigns,Website,Pageviews,September,,"8,445,651","27,057,912","71,793,639",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-October,Campaigns,Website,Pageviews,October,,"24,608,389","27,057,912","96,402,028",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-November,Campaigns,Website,Pageviews,November,,"27,084,096","27,057,912","123,486,124",,,,,,,,,,,,,,
+Campaigns-Website-Pageviews-December,Campaigns,Website,Pageviews,December,,"14,621,843","27,057,912","138,107,967",,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-January,Campaigns,Website,Avg Session Duration,January,186,214,186,214,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-February,Campaigns,Website,Avg Session Duration,February,157,219,171.5,216.5,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-March,Campaigns,Website,Avg Session Duration,March,157,219,166.67,217.33,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-April,Campaigns,Website,Avg Session Duration,April,,173,166.67,171.25,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-May,Campaigns,Website,Avg Session Duration,May,,79,166.67,156.8,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-June,Campaigns,Website,Avg Session Duration,June,,83,166.67,144.5,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-July,Campaigns,Website,Avg Session Duration,July,,134,166.67,143.29,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-August,Campaigns,Website,Avg Session Duration,August,,75,166.67,134.25,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-September,Campaigns,Website,Avg Session Duration,September,,209,166.67,143.33,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-October,Campaigns,Website,Avg Session Duration,October,,221,166.67,152.3,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-November,Campaigns,Website,Avg Session Duration,November,,200,166.67,156.36,,,,,,,,,,,,,,
+Campaigns-Website-Avg Session Duration-December,Campaigns,Website,Avg Session Duration,December,,240,166.67,164.17,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-January,Campaigns,Website,Engagement Rate,January,60.8%,60.0%,60.0%,60.8%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-February,Campaigns,Website,Engagement Rate,February,58.2%,60.0%,60.0%,59.5%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-March,Campaigns,Website,Engagement Rate,March,59.0%,60.0%,60.0%,59.3%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-April,Campaigns,Website,Engagement Rate,April,,,60.0%,60.0%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-May,Campaigns,Website,Engagement Rate,May,,,60.0%,60.0%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-June,Campaigns,Website,Engagement Rate,June,,,60.0%,60.0%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-July,Campaigns,Website,Engagement Rate,July,,,60.0%,60.0%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-August,Campaigns,Website,Engagement Rate,August,,,60.0%,60.0%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-September,Campaigns,Website,Engagement Rate,September,,,60.0%,60.0%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-October,Campaigns,Website,Engagement Rate,October,,,60.0%,60.0%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-November,Campaigns,Website,Engagement Rate,November,,,60.0%,60.0%,,,,,,,,,,,,,,
+Campaigns-Website-Engagement Rate-December,Campaigns,Website,Engagement Rate,December,,,60.0%,60.0%,,,,,,,,,,,,,,`;
+    </script>
+    
+    <!-- Tab functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up tab switching
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Get the tab to show
+                    const tabToShow = this.getAttribute('data-tab');
+                    
+                    // Hide all tabs and remove active class from buttons
+                    const tabContainer = this.closest('.tab-container');
+                    tabContainer.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    tabContainer.querySelectorAll('.tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab and add active class to button
+                    document.getElementById(tabToShow + '-tab').classList.add('active');
+                    this.classList.add('active');
+                });
+            });
+            
+            // Print functionality
+            document.getElementById('print-dashboard').addEventListener('click', function() {
+                window.print();
+            });
+        });
+    </script>
+    
+    <!-- Lazy Loading for Charts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const lazyCharts = document.querySelectorAll('canvas[data-lazy="true"]');
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const canvas = entry.target;
+                        const chartId = canvas.id;
+                        // Initialize the chart when it becomes visible
+                        initializeChart(chartId);
+                        observer.unobserve(canvas);
+                    }
+                });
+            });
+
+            lazyCharts.forEach(chart => observer.observe(chart));
+
+            function initializeChart(chartId) {
+                // Example chart initialization logic
+                console.log(`Initializing chart: ${chartId}`);
+                // Add your chart.js initialization code here
+            }
+        });
+    </script>
+    
+    <!-- Load JavaScript files -->
+    <script src="Website.js"></script>
+    <script src="populateMetricCards.js"></script>
+    <script src="createCharts.js"></script>
+    <script src="collapsible.js"></script>
+    
+    <!-- Initialize dashboard -->
+    <script>
+        // Wait for the page to load and then initialize the dashboard
+        window.addEventListener('load', function() {
+            console.log('Page loaded, initializing dashboard...');
+            try {
+                // Show loading indicator
+                document.getElementById('metrics-container').innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-name"><i class="fas fa-spinner fa-spin"></i> Loading data...</div>
+                        <div class="metric-value">Please wait</div>
+                        <div class="metric-stats">
+                            <div class="metric-stat">
+                                <span class="stat-label">Processing the latest data</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                if (window.dashboardFunctions && typeof window.dashboardFunctions.initializeDashboard === 'function') {
+                    window.dashboardFunctions.initializeDashboard(csvData);
+                    console.log('Dashboard initialized successfully with latest data');
+                } else {
+                    console.error('Dashboard functions not available');
+                    document.getElementById('metrics-container').innerHTML = `
+                        <div class="metric-card">
+                            <div class="metric-name"><i class="fas fa-exclamation-triangle"></i> Error</div>
+                            <div class="metric-value">Dashboard functions not available</div>
+                            <div class="metric-stats">
+                                <div class="metric-stat">
+                                    <span class="stat-label">Please check if Website.js is loaded correctly.</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+                document.getElementById('metrics-container').innerHTML = `
+                    <div class="metric-card">
+                        <div class="metric-name"><i class="fas fa-exclamation-triangle"></i> Error</div>
+                        <div class="metric-value">Failed to initialize dashboard</div>
+                        <div class="metric-stats">
+                            <div class="metric-stat">
+                                <span class="stat-label">Please try again later or contact support.</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
