@@ -19,7 +19,7 @@ const CHART_COLORS = {
 
 // Constants for frequently used values
 const METRICS_CONTAINER_ID = 'metrics-container';
-const LATEST_MONTH = 'March'; // Make sure this matches exactly with the month name in the CSV
+const LATEST_MONTH = 'April'; // Make sure this matches exactly with the month name in the CSV
 const TOGGLE_DARK_MODE_ID = 'toggle-dark-mode';
 
 /**
@@ -248,28 +248,28 @@ function calculateTotals(data) {
   console.log('Calculating totals across all sub-initiatives...');
   
   const totals = {
-    'Total Sessions': {
+    'Organic Total Sessions': {
       actual: {},
       forecast: {},
       ytdActual: {},
       ytdForecast: {},
       momChange: {}
     },
-    'Pageviews': {
+    'Organic Total Users': {
       actual: {},
       forecast: {},
       ytdActual: {},
       ytdForecast: {},
       momChange: {}
     },
-    'Avg Session Duration': {
+    '% of users clicking on to further pages': {
       actual: {},
       forecast: {},
       ytdActual: {},
       ytdForecast: {},
       momChange: {}
     },
-    'Engagement Rate': {
+    '% of users clicking to partner pages': {
       actual: {},
       forecast: {},
       ytdActual: {},
@@ -413,8 +413,10 @@ function calculateYTDAchievement(data) {
 function formatNumber(number, metric) {
   if (number === 0) return '0';
   
-  // Handle percentage values (Engagement Rate)
-  if (metric === 'Engagement Rate') {
+  // Handle percentage values (Engagement Rate and other percentage metrics)
+  if (metric === 'Engagement Rate' || 
+      metric === '% of users clicking on to further pages' || 
+      metric === '% of users clicking to partner pages') {
     return (number * 100).toFixed(1) + '%';
   }
   
@@ -425,7 +427,7 @@ function formatNumber(number, metric) {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
   
-  // Handle large numbers (Total Sessions, Pageviews)
+  // Handle large numbers (Total Sessions, Pageviews, Organic Total Sessions, Organic Total Users)
   if (number >= 1000000000) {
     return (number / 1000000000).toFixed(1) + 'B';
   } else if (number >= 1000000) {
@@ -605,16 +607,16 @@ function createActualVsForecastChart(canvasId, data, initiative, subInitiative, 
     const allMonths = Object.keys(metricData.actual);
     console.log(`All months in data: ${allMonths.join(', ')}`);
     
-    // Filter for Q1 months (January, February, March)
-    const q1Months = ['January', 'February', 'March'];
-    const months = allMonths.filter(month => q1Months.includes(month));
+    // Filter for January through April months
+    const displayMonths = ['January', 'February', 'March', 'April'];
+    const months = allMonths.filter(month => displayMonths.includes(month));
     
     if (months.length === 0) {
       console.warn(`No Q1 monthly data found for ${initiative} - ${subInitiative} - ${metric}`);
     }
     
     // Sort months chronologically
-    months.sort((a, b) => q1Months.indexOf(a) - q1Months.indexOf(b));
+    months.sort((a, b) => displayMonths.indexOf(a) - displayMonths.indexOf(b));
     console.log(`Found ${months.length} months of data: ${months.join(', ')}`);
     
     // Extract actual and forecast data
@@ -652,18 +654,21 @@ function createActualVsForecastChart(canvasId, data, initiative, subInitiative, 
     baseChartOptions.plugins.tooltip.metric = metric;
     
     // Customize Y-axis based on metric
-    if (metric === 'Engagement Rate') {
+    if (metric === 'Engagement Rate' || 
+        metric === '% of users clicking on to further pages' || 
+        metric === '% of users clicking to partner pages') {
       baseChartOptions.scales.y.ticks.callback = function(value) {
-        return (value * 100).toFixed(0) + '%';
+        return (value * 100).toFixed(1) + '%';
       };
-      baseChartOptions.scales.y.max = 1; // 100%
+      baseChartOptions.scales.y.max = 0.4; // 40% (adjust based on data range)
     } else if (metric === 'Avg Session Duration') {
       baseChartOptions.scales.y.ticks.callback = function(value) {
         const minutes = Math.floor(value / 60);
         const seconds = Math.floor(value % 60);
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
       };
-    } else if (metric === 'Total Sessions' || metric === 'Pageviews') {
+    } else if (metric === 'Total Sessions' || metric === 'Pageviews' || 
+               metric === 'Organic Total Sessions' || metric === 'Organic Total Users') {
       baseChartOptions.scales.y.ticks.callback = function(value) {
         if (value >= 1000000000) {
           return (value / 1000000000).toFixed(1) + 'B';
@@ -828,7 +833,7 @@ function createActualVsForecastChart(canvasId, data, initiative, subInitiative, 
 function createMonthlyTrendChart(canvasId, data, metric) {
   const ctx = document.getElementById(canvasId).getContext('2d');
   
-  const months = MONTHS.slice(0, 3); // Only Q1 months
+  const months = MONTHS.slice(0, 4); // January through April
   const datasets = [];
   
   // Define specific colors for each sub-initiative for consistency
@@ -908,7 +913,7 @@ function createMonthlyTrendChart(canvasId, data, metric) {
         ...chartOptions.plugins,
         title: {
           display: true,
-          text: `Monthly ${metric} Trend - Q1 2025`,
+          text: `Monthly ${metric} Trend - January-April 2025`,
           color: '#e2e8f0',
           font: {
             family: "'Inter', sans-serif",
@@ -928,7 +933,7 @@ function createYTDAchievementChart(canvasId, data, ytdAchievement) {
   const ctx = document.getElementById(canvasId).getContext('2d');
   
   const datasets = [];
-  const latestMonth = 'March'; // Latest month with actual data
+  const latestMonth = 'April'; // Latest month with actual data
   
   console.log('Creating YTD achievement chart with data for month:', latestMonth);
   

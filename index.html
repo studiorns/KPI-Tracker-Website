@@ -692,7 +692,7 @@
                 </a>
             </div>
             <h1>Website KPI Dashboard</h1>
-            <p>Q1 2025 Performance Analysis</p>
+            <p>January-April 2025 Performance Analysis</p>
         </div>
     </header>
     
@@ -707,7 +707,7 @@
             <div class="section-content">
                 <div class="insight-summary">
                     <h3><i class="fas fa-lightbulb"></i> Total Performance</h3>
-                    <p>Aggregated metrics across Website initiatives showing total sessions, pageviews, average session duration, and engagement rate with comparisons to forecast, MoM, and YTD performance.</p>
+                    <p>Aggregated metrics across Website initiatives showing organic total sessions, organic total users, and user engagement metrics (% of users clicking on to further pages and % of users clicking to partner pages) with comparisons to forecast, MoM, and YTD performance.</p>
                 </div>
                 
                 <div class="metrics-grid" id="total-metrics-container">
@@ -730,7 +730,7 @@
             <div class="section-content">
             <div class="insight-summary">
                 <h3><i class="fas fa-lightbulb"></i> Key Insights</h3>
-                <p>Website metrics are performing well in Q1 2025. Total Sessions exceeded forecast by 338.4% in March, while Pageviews are also significantly above forecast at 381.4% of target. Average Session Duration is slightly below forecast at 71.7% of target, and Engagement Rate is slightly below forecast at 98.3% of target.</p>
+                <p>Website metrics are performing well in January-April 2025. Organic Total Sessions reached 92.2% of forecast in March, with YTD performance at 73.2% of forecast through April. Organic Total Users performed at 92.6% of forecast in March. User engagement metrics show positive results with the percentage of users clicking on to further pages exceeding forecast (33.5% actual vs 29.15% forecast in March, 114.9% of target) and the percentage of users clicking to partner pages performing close to forecast (11.73% actual vs 11.36% forecast in March, 103.3% of target).</p>
             </div>
             
             <div class="metrics-grid" id="metrics-container">
@@ -754,33 +754,33 @@
             
             <div class="tab-container">
                 <div class="tab-buttons">
-                    <button class="tab-btn active" data-tab="total-sessions">Total Sessions</button>
-                    <button class="tab-btn" data-tab="pageviews">Pageviews</button>
-                    <button class="tab-btn" data-tab="avg-session-duration">Avg Session Duration</button>
-                    <button class="tab-btn" data-tab="engagement-rate">Engagement Rate</button>
+                    <button class="tab-btn active" data-tab="total-organic-sessions">Total Organic Sessions</button>
+                    <button class="tab-btn" data-tab="organic-total-users">Organic Total Users</button>
+                    <button class="tab-btn" data-tab="users-clicking-further">% Users Clicking Further</button>
+                    <button class="tab-btn" data-tab="users-clicking-partner">% Users Clicking Partner</button>
                 </div>
                 
-                <div class="tab-content active" id="total-sessions-tab">
+                <div class="tab-content active" id="total-organic-sessions-tab">
                     <div class="chart-container">
-                        <canvas id="total-sessions-trend-chart" data-lazy="true"></canvas>
+                        <canvas id="total-organic-sessions-trend-chart" data-lazy="true"></canvas>
                     </div>
                 </div>
                 
-                <div class="tab-content" id="pageviews-tab">
+                <div class="tab-content" id="organic-total-users-tab">
                     <div class="chart-container">
-                        <canvas id="pageviews-trend-chart" data-lazy="true"></canvas>
+                        <canvas id="organic-total-users-trend-chart" data-lazy="true"></canvas>
                     </div>
                 </div>
                 
-                <div class="tab-content" id="avg-session-duration-tab">
+                <div class="tab-content" id="users-clicking-further-tab">
                     <div class="chart-container">
-                        <canvas id="avg-session-duration-trend-chart" data-lazy="true"></canvas>
+                        <canvas id="users-clicking-further-trend-chart" data-lazy="true"></canvas>
                     </div>
                 </div>
                 
-                <div class="tab-content" id="engagement-rate-tab">
+                <div class="tab-content" id="users-clicking-partner-tab">
                     <div class="chart-container">
-                        <canvas id="engagement-rate-trend-chart" data-lazy="true"></canvas>
+                        <canvas id="users-clicking-partner-trend-chart" data-lazy="true"></canvas>
                     </div>
                 </div>
             </div>
@@ -819,18 +819,18 @@
                     <h3>Website Performance</h3>
                     <div class="charts-row">
                         <div class="chart-container">
-                            <canvas id="initiative-cards-website-total-sessions-chart" data-lazy="true"></canvas>
+                            <canvas id="initiative-cards-website-total-organic-sessions-chart" data-lazy="true"></canvas>
                         </div>
                         <div class="chart-container">
-                            <canvas id="initiative-cards-website-pageviews-chart" data-lazy="true"></canvas>
+                            <canvas id="initiative-cards-website-organic-total-users-chart" data-lazy="true"></canvas>
                         </div>
                     </div>
                     <div class="charts-row">
                         <div class="chart-container">
-                            <canvas id="initiative-cards-website-avg-session-duration-chart" data-lazy="true"></canvas>
+                            <canvas id="initiative-cards-website-users-clicking-further-chart" data-lazy="true"></canvas>
                         </div>
                         <div class="chart-container">
-                            <canvas id="initiative-cards-website-engagement-rate-chart" data-lazy="true"></canvas>
+                            <canvas id="initiative-cards-website-users-clicking-partner-chart" data-lazy="true"></canvas>
                         </div>
                     </div>
                 </div>
@@ -852,55 +852,103 @@
     <!-- CSV Data -->
     <script>
         // CSV data embedded directly to avoid CORS issues with local files
-        const csvData = `﻿Key,Initiative Cards,Sub Initiative,Metric,Month,Actual,Forecast,YTD Actual Totals,YTD Forecast Totals,,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-January,Campaigns,Website,Total Sessions,January,"4,893,609","4,279,800","4,893,609","4,279,800",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-February,Campaigns,Website,Total Sessions,February,"5,770,132","3,064,721","10,663,741","7,344,521",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-March,Campaigns,Website,Total Sessions,March,"12,690,710","2,893,378","23,354,451","10,237,899",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-April,Campaigns,Website,Total Sessions,April,,"2,170,257","23,354,451","12,408,156",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-May,Campaigns,Website,Total Sessions,May,,"4,589,257","23,354,451","16,997,413",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-June,Campaigns,Website,Total Sessions,June,,"15,625,576","23,354,451","32,622,989",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-July,Campaigns,Website,Total Sessions,July,,"12,091,908","23,354,451","44,714,897",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-August,Campaigns,Website,Total Sessions,August,,"9,009,597","23,354,451","53,724,494",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-September,Campaigns,Website,Total Sessions,September,,"6,932,564","23,354,451","60,657,058",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-October,Campaigns,Website,Total Sessions,October,,"21,054,665","23,354,451","81,711,723",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-November,Campaigns,Website,Total Sessions,November,,"23,915,588","23,354,451","105,627,311",,,,,,,,,,,,,,
-Campaigns-Website-Total Sessions-December,Campaigns,Website,Total Sessions,December,,"12,668,764","23,354,451","118,296,075",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-January,Campaigns,Website,Pageviews,January,"5,603,654","5,898,822","5,603,654","5,898,822",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-February,Campaigns,Website,Pageviews,February,"6,659,247","4,195,545","12,262,901","10,094,367",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-March,Campaigns,Website,Pageviews,March,"14,795,011","3,878,884","27,057,912","13,973,251",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-April,Campaigns,Website,Pageviews,April,,"2,849,490","27,057,912","16,822,741",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-May,Campaigns,Website,Pageviews,May,,"5,740,308","27,057,912","22,563,049",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-June,Campaigns,Website,Pageviews,June,,"17,253,502","27,057,912","39,816,551",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-July,Campaigns,Website,Pageviews,July,,"12,224,496","27,057,912","52,041,047",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-August,Campaigns,Website,Pageviews,August,,"11,306,941","27,057,912","63,347,988",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-September,Campaigns,Website,Pageviews,September,,"8,445,651","27,057,912","71,793,639",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-October,Campaigns,Website,Pageviews,October,,"24,608,389","27,057,912","96,402,028",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-November,Campaigns,Website,Pageviews,November,,"27,084,096","27,057,912","123,486,124",,,,,,,,,,,,,,
-Campaigns-Website-Pageviews-December,Campaigns,Website,Pageviews,December,,"14,621,843","27,057,912","138,107,967",,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-January,Campaigns,Website,Avg Session Duration,January,186,214,186,214,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-February,Campaigns,Website,Avg Session Duration,February,157,219,171.5,216.5,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-March,Campaigns,Website,Avg Session Duration,March,157,219,166.67,217.33,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-April,Campaigns,Website,Avg Session Duration,April,,173,166.67,171.25,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-May,Campaigns,Website,Avg Session Duration,May,,79,166.67,156.8,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-June,Campaigns,Website,Avg Session Duration,June,,83,166.67,144.5,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-July,Campaigns,Website,Avg Session Duration,July,,134,166.67,143.29,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-August,Campaigns,Website,Avg Session Duration,August,,75,166.67,134.25,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-September,Campaigns,Website,Avg Session Duration,September,,209,166.67,143.33,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-October,Campaigns,Website,Avg Session Duration,October,,221,166.67,152.3,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-November,Campaigns,Website,Avg Session Duration,November,,200,166.67,156.36,,,,,,,,,,,,,,
-Campaigns-Website-Avg Session Duration-December,Campaigns,Website,Avg Session Duration,December,,240,166.67,164.17,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-January,Campaigns,Website,Engagement Rate,January,60.8%,60.0%,60.0%,60.8%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-February,Campaigns,Website,Engagement Rate,February,58.2%,60.0%,60.0%,59.5%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-March,Campaigns,Website,Engagement Rate,March,59.0%,60.0%,60.0%,59.3%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-April,Campaigns,Website,Engagement Rate,April,,,60.0%,60.0%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-May,Campaigns,Website,Engagement Rate,May,,,60.0%,60.0%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-June,Campaigns,Website,Engagement Rate,June,,,60.0%,60.0%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-July,Campaigns,Website,Engagement Rate,July,,,60.0%,60.0%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-August,Campaigns,Website,Engagement Rate,August,,,60.0%,60.0%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-September,Campaigns,Website,Engagement Rate,September,,,60.0%,60.0%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-October,Campaigns,Website,Engagement Rate,October,,,60.0%,60.0%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-November,Campaigns,Website,Engagement Rate,November,,,60.0%,60.0%,,,,,,,,,,,,,,
-Campaigns-Website-Engagement Rate-December,Campaigns,Website,Engagement Rate,December,,,60.0%,60.0%,,,,,,,,,,,,,,`;
+        const csvData = `Key,Initiative Cards,Sub Initiative,Metric,Month,Actual,Forecast,YTD Actual Totals,YTD Forecast Totals
+Campaigns-Website-Total Sessions-January,Campaigns,Website,Total Sessions,January,"192,312","265,450","192,312","265,450.00"
+Campaigns-Website-Total Sessions-February,Campaigns,Website,Total Sessions,February,"163,631","238,697","355,943","504,147.00"
+Campaigns-Website-Total Sessions-March,Campaigns,Website,Total Sessions,March,"153,650","166,718","509,593","670,865.00"
+Campaigns-Website-Total Sessions-April,Campaigns,Website,Total Sessions,April,"148,268","227,768","657,861","898,633.00"
+Campaigns-Website-Total Sessions-May,Campaigns,Website,Total Sessions,May,,"175,539","657,861","1,074,172.00"
+Campaigns-Website-Total Sessions-June,Campaigns,Website,Total Sessions,June,,"144,730","657,861","1,218,902.00"
+Campaigns-Website-Total Sessions-July,Campaigns,Website,Total Sessions,July,,"134,883","657,861","1,353,785.00"
+Campaigns-Website-Total Sessions-August,Campaigns,Website,Total Sessions,August,,"119,693","657,861","1,473,478.00"
+Campaigns-Website-Total Sessions-September,Campaigns,Website,Total Sessions,September,,"137,002","657,861","1,610,480.00"
+Campaigns-Website-Total Sessions-October,Campaigns,Website,Total Sessions,October,,"178,350","657,861","1,788,830.00"
+Campaigns-Website-Total Sessions-November,Campaigns,Website,Total Sessions,November,,"205,619","657,861","1,994,449.00"
+Campaigns-Website-Total Sessions-December,Campaigns,Website,Total Sessions,December,,"244,570","657,861","2,239,019.00"
+Campaigns-Website-Pageviews-January,Campaigns,Website,Pageviews,January,"146,530","201,743","146,530","201,743.00"
+Campaigns-Website-Pageviews-February,Campaigns,Website,Pageviews,February,"124,004","191,859","270,534","393,602.00"
+Campaigns-Website-Pageviews-March,Campaigns,Website,Pageviews,March,"118,344","127,786","388,878","521,388.00"
+Campaigns-Website-Pageviews-April,Campaigns,Website,Pageviews,April,"115,094","188,354","503,972","709,742.00"
+Campaigns-Website-Pageviews-May,Campaigns,Website,Pageviews,May,,"142,254","503,972","851,996.00"
+Campaigns-Website-Pageviews-June,Campaigns,Website,Pageviews,June,,"112,959","503,972","964,955.00"
+Campaigns-Website-Pageviews-July,Campaigns,Website,Pageviews,July,,"108,196","503,972","1,073,151.00"
+Campaigns-Website-Pageviews-August,Campaigns,Website,Pageviews,August,,"104,781","503,972","1,177,932.00"
+Campaigns-Website-Pageviews-September,Campaigns,Website,Pageviews,September,,"111,520","503,972","1,289,452.00"
+Campaigns-Website-Pageviews-October,Campaigns,Website,Pageviews,October,,"143,153","503,972","1,432,605.00"
+Campaigns-Website-Pageviews-November,Campaigns,Website,Pageviews,November,,"160,856","503,972","1,593,461.00"
+Campaigns-Website-Pageviews-December,Campaigns,Website,Pageviews,December,,"185,479","503,972","1,778,940.00"
+Campaigns-Website-Organic Total Sessions-January,Campaigns,Website,Organic Total Sessions,January,"192,312","265,450","192,312","265,450.00"
+Campaigns-Website-Organic Total Sessions-February,Campaigns,Website,Organic Total Sessions,February,"163,631","238,697","355,943","504,147.00"
+Campaigns-Website-Organic Total Sessions-March,Campaigns,Website,Organic Total Sessions,March,"153,650","166,718","509,593","670,865.00"
+Campaigns-Website-Organic Total Sessions-April,Campaigns,Website,Organic Total Sessions,April,"148,268","227,768","657,861","898,633.00"
+Campaigns-Website-Organic Total Sessions-May,Campaigns,Website,Organic Total Sessions,May,,"175,539","657,861","1,074,172.00"
+Campaigns-Website-Organic Total Sessions-June,Campaigns,Website,Organic Total Sessions,June,,"144,730","657,861","1,218,902.00"
+Campaigns-Website-Organic Total Sessions-July,Campaigns,Website,Organic Total Sessions,July,,"134,883","657,861","1,353,785.00"
+Campaigns-Website-Organic Total Sessions-August,Campaigns,Website,Organic Total Sessions,August,,"119,693","657,861","1,473,478.00"
+Campaigns-Website-Organic Total Sessions-September,Campaigns,Website,Organic Total Sessions,September,,"137,002","657,861","1,610,480.00"
+Campaigns-Website-Organic Total Sessions-October,Campaigns,Website,Organic Total Sessions,October,,"178,350","657,861","1,788,830.00"
+Campaigns-Website-Organic Total Sessions-November,Campaigns,Website,Organic Total Sessions,November,,"205,619","657,861","1,994,449.00"
+Campaigns-Website-Organic Total Sessions-December,Campaigns,Website,Organic Total Sessions,December,,"244,570","657,861","2,239,019.00"
+Campaigns-Website-Organic Total Users-January,Campaigns,Website,Organic Total Users,January,"146,530","201,743","146,530","201,743.00"
+Campaigns-Website-Organic Total Users-February,Campaigns,Website,Organic Total Users,February,"124,004","191,859","270,534","393,602.00"
+Campaigns-Website-Organic Total Users-March,Campaigns,Website,Organic Total Users,March,"118,344","127,786","388,878","521,388.00"
+Campaigns-Website-Organic Total Users-April,Campaigns,Website,Organic Total Users,April,"115,094","188,354","503,972","709,742.00"
+Campaigns-Website-Organic Total Users-May,Campaigns,Website,Organic Total Users,May,,"142,254","503,972","851,996.00"
+Campaigns-Website-Organic Total Users-June,Campaigns,Website,Organic Total Users,June,,"112,959","503,972","964,955.00"
+Campaigns-Website-Organic Total Users-July,Campaigns,Website,Organic Total Users,July,,"108,196","503,972","1,073,151.00"
+Campaigns-Website-Organic Total Users-August,Campaigns,Website,Organic Total Users,August,,"104,781","503,972","1,177,932.00"
+Campaigns-Website-Organic Total Users-September,Campaigns,Website,Organic Total Users,September,,"111,520","503,972","1,289,452.00"
+Campaigns-Website-Organic Total Users-October,Campaigns,Website,Organic Total Users,October,,"143,153","503,972","1,432,605.00"
+Campaigns-Website-Organic Total Users-November,Campaigns,Website,Organic Total Users,November,,"160,856","503,972","1,593,461.00"
+Campaigns-Website-Organic Total Users-December,Campaigns,Website,Organic Total Users,December,,"185,479","503,972","1,778,940.00"
+Campaigns-Website-% of users clicking on to further pages-January,Campaigns,Website,% of users clicking on to further pages,January,29.40%,28.40%,29.40%,28.0%
+Campaigns-Website-% of users clicking on to further pages-February,Campaigns,Website,% of users clicking on to further pages,February,31.30%,28.76%,30.35%,29.0%
+Campaigns-Website-% of users clicking on to further pages-March,Campaigns,Website,% of users clicking on to further pages,March,33.50%,29.15%,31.40%,29.0%
+Campaigns-Website-% of users clicking on to further pages-April,Campaigns,Website,% of users clicking on to further pages,April,32.50%,29.54%,31.68%,29.0%
+Campaigns-Website-% of users clicking on to further pages-May,Campaigns,Website,% of users clicking on to further pages,May,,29.92%,31.68%,29.0%
+Campaigns-Website-% of users clicking on to further pages-June,Campaigns,Website,% of users clicking on to further pages,June,,30.31%,31.68%,29.0%
+Campaigns-Website-% of users clicking on to further pages-July,Campaigns,Website,% of users clicking on to further pages,July,,30.70%,31.68%,30.0%
+Campaigns-Website-% of users clicking on to further pages-August,Campaigns,Website,% of users clicking on to further pages,August,,31.08%,31.68%,30.0%
+Campaigns-Website-% of users clicking on to further pages-September,Campaigns,Website,% of users clicking on to further pages,September,,31.47%,31.68%,30.0%
+Campaigns-Website-% of users clicking on to further pages-October,Campaigns,Website,% of users clicking on to further pages,October,,31.86%,31.68%,30.0%
+Campaigns-Website-% of users clicking on to further pages-November,Campaigns,Website,% of users clicking on to further pages,November,,32.34%,31.68%,30.0%
+Campaigns-Website-% of users clicking on to further pages-December,Campaigns,Website,% of users clicking on to further pages,December,,32.63%,31.68%,31.0%
+Campaigns-Website-% of users clicking to partner pages-January,Campaigns,Website,% of users clicking to partner pages,January,11.95%,11.00%,11.95%,11.0%
+Campaigns-Website-% of users clicking to partner pages-February,Campaigns,Website,% of users clicking to partner pages,February,11.75%,11.18%,11.85%,11.0%
+Campaigns-Website-% of users clicking to partner pages-March,Campaigns,Website,% of users clicking to partner pages,March,11.73%,11.36%,11.81%,11.0%
+Campaigns-Website-% of users clicking to partner pages-April,Campaigns,Website,% of users clicking to partner pages,April,11.08%,11.54%,11.63%,11.0%
+Campaigns-Website-% of users clicking to partner pages-May,Campaigns,Website,% of users clicking to partner pages,May,,11.72%,11.63%,11.0%
+Campaigns-Website-% of users clicking to partner pages-June,Campaigns,Website,% of users clicking to partner pages,June,,11.90%,11.63%,11.0%
+Campaigns-Website-% of users clicking to partner pages-July,Campaigns,Website,% of users clicking to partner pages,July,,12.09%,11.63%,12.0%
+Campaigns-Website-% of users clicking to partner pages-August,Campaigns,Website,% of users clicking to partner pages,August,,12.27%,11.63%,12.0%
+Campaigns-Website-% of users clicking to partner pages-September,Campaigns,Website,% of users clicking to partner pages,September,,12.45%,11.63%,12.0%
+Campaigns-Website-% of users clicking to partner pages-October,Campaigns,Website,% of users clicking to partner pages,October,,12.63%,11.63%,12.0%
+Campaigns-Website-% of users clicking to partner pages-November,Campaigns,Website,% of users clicking to partner pages,November,,12.81%,11.63%,12.0%
+Campaigns-Website-% of users clicking to partner pages-December,Campaigns,Website,% of users clicking to partner pages,December,,13.00%,11.63%,12.0%
+Campaigns-Website-Avg Session Duration-January,Campaigns,Website,Avg Session Duration,January,186,214,186,214
+Campaigns-Website-Avg Session Duration-February,Campaigns,Website,Avg Session Duration,February,157,219,171.5,216.5
+Campaigns-Website-Avg Session Duration-March,Campaigns,Website,Avg Session Duration,March,157,219,166.67,217.33
+Campaigns-Website-Avg Session Duration-April,Campaigns,Website,Avg Session Duration,April,162,173,165.5,206.25
+Campaigns-Website-Avg Session Duration-May,Campaigns,Website,Avg Session Duration,May,,79,165.5,183.8
+Campaigns-Website-Avg Session Duration-June,Campaigns,Website,Avg Session Duration,June,,83,165.5,164.5
+Campaigns-Website-Avg Session Duration-July,Campaigns,Website,Avg Session Duration,July,,134,165.5,160.29
+Campaigns-Website-Avg Session Duration-August,Campaigns,Website,Avg Session Duration,August,,75,165.5,149.25
+Campaigns-Website-Avg Session Duration-September,Campaigns,Website,Avg Session Duration,September,,209,165.5,155.33
+Campaigns-Website-Avg Session Duration-October,Campaigns,Website,Avg Session Duration,October,,221,165.5,162.3
+Campaigns-Website-Avg Session Duration-November,Campaigns,Website,Avg Session Duration,November,,200,165.5,166.36
+Campaigns-Website-Avg Session Duration-December,Campaigns,Website,Avg Session Duration,December,,240,165.5,172.17
+Campaigns-Website-Engagement Rate-January,Campaigns,Website,Engagement Rate,January,60.8%,60.0%,60.8%,60.0%
+Campaigns-Website-Engagement Rate-February,Campaigns,Website,Engagement Rate,February,58.2%,60.0%,59.5%,60.0%
+Campaigns-Website-Engagement Rate-March,Campaigns,Website,Engagement Rate,March,59.0%,60.0%,59.3%,60.0%
+Campaigns-Website-Engagement Rate-April,Campaigns,Website,Engagement Rate,April,61.2%,60.0%,59.8%,60.0%
+Campaigns-Website-Engagement Rate-May,Campaigns,Website,Engagement Rate,May,,60.0%,59.8%,60.0%
+Campaigns-Website-Engagement Rate-June,Campaigns,Website,Engagement Rate,June,,60.0%,59.8%,60.0%
+Campaigns-Website-Engagement Rate-July,Campaigns,Website,Engagement Rate,July,,60.0%,59.8%,60.0%
+Campaigns-Website-Engagement Rate-August,Campaigns,Website,Engagement Rate,August,,60.0%,59.8%,60.0%
+Campaigns-Website-Engagement Rate-September,Campaigns,Website,Engagement Rate,September,,60.0%,59.8%,60.0%
+Campaigns-Website-Engagement Rate-October,Campaigns,Website,Engagement Rate,October,,60.0%,59.8%,60.0%
+Campaigns-Website-Engagement Rate-November,Campaigns,Website,Engagement Rate,November,,60.0%,59.8%,60.0%
+Campaigns-Website-Engagement Rate-December,Campaigns,Website,Engagement Rate,December,,60.0%,59.8%,60.0%`;
     </script>
     
     <!-- Tab functionality -->

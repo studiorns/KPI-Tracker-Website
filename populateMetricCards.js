@@ -16,7 +16,12 @@ function createTotalMetricCards() {
     totalMetricsContainer.innerHTML = '';
     
     // Define metrics to display
-    const metricsToDisplay = ['Total Sessions', 'Pageviews', 'Avg Session Duration', 'Engagement Rate'];
+    const metricsToDisplay = [
+      'Organic Total Sessions',
+      'Organic Total Users',
+      '% of users clicking on to further pages',
+      '% of users clicking to partner pages'
+    ];
     
     // Create YTD cards for each metric FIRST
     metricsToDisplay.forEach(metric => {
@@ -50,7 +55,11 @@ function createTotalMetricCards() {
           'Total Sessions': 'fa-users',
           'Pageviews': 'fa-eye',
           'Avg Session Duration': 'fa-clock',
-          'Engagement Rate': 'fa-chart-line'
+          'Engagement Rate': 'fa-chart-line',
+          'Organic Total Sessions': 'fa-leaf',
+          'Organic Total Users': 'fa-user-check',
+          '% of users clicking on to further pages': 'fa-mouse-pointer',
+          '% of users clicking to partner pages': 'fa-external-link-alt'
         };
         
         // Create card content
@@ -121,7 +130,11 @@ function createTotalMetricCards() {
           'Total Sessions': 'fa-users',
           'Pageviews': 'fa-eye',
           'Avg Session Duration': 'fa-clock',
-          'Engagement Rate': 'fa-chart-line'
+          'Engagement Rate': 'fa-chart-line',
+          'Organic Total Sessions': 'fa-leaf',
+          'Organic Total Users': 'fa-user-check',
+          '% of users clicking on to further pages': 'fa-mouse-pointer',
+          '% of users clicking to partner pages': 'fa-external-link-alt'
         };
         
         // Create card content
@@ -183,6 +196,14 @@ function populateMetricCards() {
       metrics: dashboardData.metrics
     });
     
+    // Define metrics to exclude
+    const excludedMetrics = [
+      'Engagement Rate',
+      'Avg Session Duration',
+      'Total Sessions',
+      'Pageviews'
+    ];
+    
     // Create cards for each initiative, sub-initiative, metric combination
     let cardCount = 0;
     
@@ -210,6 +231,12 @@ function populateMetricCards() {
         
         metrics.forEach(metric => {
           try {
+            // Skip excluded metrics
+            if (excludedMetrics.includes(metric)) {
+              console.log(`Skipping excluded metric: ${metric}`);
+              return;
+            }
+            
             console.log(`Creating card for ${initiative} - ${subInitiative} - ${metric}`);
             
             const metricData = dashboardData.structured[initiative][subInitiative][metric];
@@ -263,7 +290,11 @@ function populateMetricCards() {
               'Total Sessions': 'fa-users',
               'Pageviews': 'fa-eye',
               'Avg Session Duration': 'fa-clock',
-              'Engagement Rate': 'fa-chart-line'
+              'Engagement Rate': 'fa-chart-line',
+              'Organic Total Sessions': 'fa-leaf',
+              'Organic Total Users': 'fa-user-check',
+              '% of users clicking on to further pages': 'fa-mouse-pointer',
+              '% of users clicking to partner pages': 'fa-external-link-alt'
             };
             
             // Create card content
