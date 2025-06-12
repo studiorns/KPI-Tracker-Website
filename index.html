@@ -692,7 +692,7 @@
                 </a>
             </div>
             <h1>Website KPI Dashboard</h1>
-            <p>January-April 2025 Performance Analysis</p>
+            <p>January-May 2025 Performance Analysis</p>
         </div>
     </header>
     
@@ -707,7 +707,7 @@
             <div class="section-content">
                 <div class="insight-summary">
                     <h3><i class="fas fa-lightbulb"></i> Total Performance</h3>
-                    <p>Aggregated metrics across Website initiatives showing organic total sessions, organic total users, and user engagement metrics (% of users clicking on to further pages and % of users clicking to partner pages) with comparisons to forecast, MoM, and YTD performance.</p>
+                    <p>Aggregated metrics across Website initiatives showing organic total sessions, organic total users, and user engagement metrics (% of users clicking on to further pages, % of users clicking to partner pages, average session duration, and engagement rate) with comparisons to forecast, MoM, and YTD performance.</p>
                 </div>
                 
                 <div class="metrics-grid" id="total-metrics-container">
@@ -730,7 +730,7 @@
             <div class="section-content">
             <div class="insight-summary">
                 <h3><i class="fas fa-lightbulb"></i> Key Insights</h3>
-                <p>Website metrics are performing well in January-April 2025. Organic Total Sessions reached 92.2% of forecast in March, with YTD performance at 73.2% of forecast through April. Organic Total Users performed at 92.6% of forecast in March. User engagement metrics show positive results with the percentage of users clicking on to further pages exceeding forecast (33.5% actual vs 29.15% forecast in March, 114.9% of target) and the percentage of users clicking to partner pages performing close to forecast (11.73% actual vs 11.36% forecast in March, 103.3% of target).</p>
+                <p>Website metrics show mixed performance through May 2025. YTD Organic Total Sessions reached 790,217 vs 1,074,172 forecast (73.6% achievement). YTD Organic Total Users achieved 606,922 vs 851,996 forecast (71.2% achievement). User engagement metrics continue to excel with % of users clicking further pages at 31.52% YTD vs 29% forecast (108.7% achievement) and % of users clicking partner pages at 11.2% YTD vs 11% forecast (101.8% achievement). May showed traffic challenges with sessions at 75.4% of forecast (132,356 vs 175,539) and users at 72.4% of forecast (102,950 vs 142,254), but engagement quality remained strong with clicking further pages at 103.3% of forecast (30.9% vs 29.92%).</p>
             </div>
             
             <div class="metrics-grid" id="metrics-container">
@@ -783,6 +783,7 @@
                         <canvas id="users-clicking-partner-trend-chart" data-lazy="true"></canvas>
                     </div>
                 </div>
+                
             </div>
             </div>
         </div>
@@ -853,102 +854,54 @@
     <script>
         // CSV data embedded directly to avoid CORS issues with local files
         const csvData = `Key,Initiative Cards,Sub Initiative,Metric,Month,Actual,Forecast,YTD Actual Totals,YTD Forecast Totals
-Campaigns-Website-Total Sessions-January,Campaigns,Website,Total Sessions,January,"192,312","265,450","192,312","265,450.00"
-Campaigns-Website-Total Sessions-February,Campaigns,Website,Total Sessions,February,"163,631","238,697","355,943","504,147.00"
-Campaigns-Website-Total Sessions-March,Campaigns,Website,Total Sessions,March,"153,650","166,718","509,593","670,865.00"
-Campaigns-Website-Total Sessions-April,Campaigns,Website,Total Sessions,April,"148,268","227,768","657,861","898,633.00"
-Campaigns-Website-Total Sessions-May,Campaigns,Website,Total Sessions,May,,"175,539","657,861","1,074,172.00"
-Campaigns-Website-Total Sessions-June,Campaigns,Website,Total Sessions,June,,"144,730","657,861","1,218,902.00"
-Campaigns-Website-Total Sessions-July,Campaigns,Website,Total Sessions,July,,"134,883","657,861","1,353,785.00"
-Campaigns-Website-Total Sessions-August,Campaigns,Website,Total Sessions,August,,"119,693","657,861","1,473,478.00"
-Campaigns-Website-Total Sessions-September,Campaigns,Website,Total Sessions,September,,"137,002","657,861","1,610,480.00"
-Campaigns-Website-Total Sessions-October,Campaigns,Website,Total Sessions,October,,"178,350","657,861","1,788,830.00"
-Campaigns-Website-Total Sessions-November,Campaigns,Website,Total Sessions,November,,"205,619","657,861","1,994,449.00"
-Campaigns-Website-Total Sessions-December,Campaigns,Website,Total Sessions,December,,"244,570","657,861","2,239,019.00"
-Campaigns-Website-Pageviews-January,Campaigns,Website,Pageviews,January,"146,530","201,743","146,530","201,743.00"
-Campaigns-Website-Pageviews-February,Campaigns,Website,Pageviews,February,"124,004","191,859","270,534","393,602.00"
-Campaigns-Website-Pageviews-March,Campaigns,Website,Pageviews,March,"118,344","127,786","388,878","521,388.00"
-Campaigns-Website-Pageviews-April,Campaigns,Website,Pageviews,April,"115,094","188,354","503,972","709,742.00"
-Campaigns-Website-Pageviews-May,Campaigns,Website,Pageviews,May,,"142,254","503,972","851,996.00"
-Campaigns-Website-Pageviews-June,Campaigns,Website,Pageviews,June,,"112,959","503,972","964,955.00"
-Campaigns-Website-Pageviews-July,Campaigns,Website,Pageviews,July,,"108,196","503,972","1,073,151.00"
-Campaigns-Website-Pageviews-August,Campaigns,Website,Pageviews,August,,"104,781","503,972","1,177,932.00"
-Campaigns-Website-Pageviews-September,Campaigns,Website,Pageviews,September,,"111,520","503,972","1,289,452.00"
-Campaigns-Website-Pageviews-October,Campaigns,Website,Pageviews,October,,"143,153","503,972","1,432,605.00"
-Campaigns-Website-Pageviews-November,Campaigns,Website,Pageviews,November,,"160,856","503,972","1,593,461.00"
-Campaigns-Website-Pageviews-December,Campaigns,Website,Pageviews,December,,"185,479","503,972","1,778,940.00"
-Campaigns-Website-Organic Total Sessions-January,Campaigns,Website,Organic Total Sessions,January,"192,312","265,450","192,312","265,450.00"
-Campaigns-Website-Organic Total Sessions-February,Campaigns,Website,Organic Total Sessions,February,"163,631","238,697","355,943","504,147.00"
-Campaigns-Website-Organic Total Sessions-March,Campaigns,Website,Organic Total Sessions,March,"153,650","166,718","509,593","670,865.00"
-Campaigns-Website-Organic Total Sessions-April,Campaigns,Website,Organic Total Sessions,April,"148,268","227,768","657,861","898,633.00"
-Campaigns-Website-Organic Total Sessions-May,Campaigns,Website,Organic Total Sessions,May,,"175,539","657,861","1,074,172.00"
-Campaigns-Website-Organic Total Sessions-June,Campaigns,Website,Organic Total Sessions,June,,"144,730","657,861","1,218,902.00"
-Campaigns-Website-Organic Total Sessions-July,Campaigns,Website,Organic Total Sessions,July,,"134,883","657,861","1,353,785.00"
-Campaigns-Website-Organic Total Sessions-August,Campaigns,Website,Organic Total Sessions,August,,"119,693","657,861","1,473,478.00"
-Campaigns-Website-Organic Total Sessions-September,Campaigns,Website,Organic Total Sessions,September,,"137,002","657,861","1,610,480.00"
-Campaigns-Website-Organic Total Sessions-October,Campaigns,Website,Organic Total Sessions,October,,"178,350","657,861","1,788,830.00"
-Campaigns-Website-Organic Total Sessions-November,Campaigns,Website,Organic Total Sessions,November,,"205,619","657,861","1,994,449.00"
-Campaigns-Website-Organic Total Sessions-December,Campaigns,Website,Organic Total Sessions,December,,"244,570","657,861","2,239,019.00"
-Campaigns-Website-Organic Total Users-January,Campaigns,Website,Organic Total Users,January,"146,530","201,743","146,530","201,743.00"
-Campaigns-Website-Organic Total Users-February,Campaigns,Website,Organic Total Users,February,"124,004","191,859","270,534","393,602.00"
-Campaigns-Website-Organic Total Users-March,Campaigns,Website,Organic Total Users,March,"118,344","127,786","388,878","521,388.00"
-Campaigns-Website-Organic Total Users-April,Campaigns,Website,Organic Total Users,April,"115,094","188,354","503,972","709,742.00"
-Campaigns-Website-Organic Total Users-May,Campaigns,Website,Organic Total Users,May,,"142,254","503,972","851,996.00"
-Campaigns-Website-Organic Total Users-June,Campaigns,Website,Organic Total Users,June,,"112,959","503,972","964,955.00"
-Campaigns-Website-Organic Total Users-July,Campaigns,Website,Organic Total Users,July,,"108,196","503,972","1,073,151.00"
-Campaigns-Website-Organic Total Users-August,Campaigns,Website,Organic Total Users,August,,"104,781","503,972","1,177,932.00"
-Campaigns-Website-Organic Total Users-September,Campaigns,Website,Organic Total Users,September,,"111,520","503,972","1,289,452.00"
-Campaigns-Website-Organic Total Users-October,Campaigns,Website,Organic Total Users,October,,"143,153","503,972","1,432,605.00"
-Campaigns-Website-Organic Total Users-November,Campaigns,Website,Organic Total Users,November,,"160,856","503,972","1,593,461.00"
-Campaigns-Website-Organic Total Users-December,Campaigns,Website,Organic Total Users,December,,"185,479","503,972","1,778,940.00"
-Campaigns-Website-% of users clicking on to further pages-January,Campaigns,Website,% of users clicking on to further pages,January,29.40%,28.40%,29.40%,28.0%
-Campaigns-Website-% of users clicking on to further pages-February,Campaigns,Website,% of users clicking on to further pages,February,31.30%,28.76%,30.35%,29.0%
-Campaigns-Website-% of users clicking on to further pages-March,Campaigns,Website,% of users clicking on to further pages,March,33.50%,29.15%,31.40%,29.0%
-Campaigns-Website-% of users clicking on to further pages-April,Campaigns,Website,% of users clicking on to further pages,April,32.50%,29.54%,31.68%,29.0%
-Campaigns-Website-% of users clicking on to further pages-May,Campaigns,Website,% of users clicking on to further pages,May,,29.92%,31.68%,29.0%
-Campaigns-Website-% of users clicking on to further pages-June,Campaigns,Website,% of users clicking on to further pages,June,,30.31%,31.68%,29.0%
-Campaigns-Website-% of users clicking on to further pages-July,Campaigns,Website,% of users clicking on to further pages,July,,30.70%,31.68%,30.0%
-Campaigns-Website-% of users clicking on to further pages-August,Campaigns,Website,% of users clicking on to further pages,August,,31.08%,31.68%,30.0%
-Campaigns-Website-% of users clicking on to further pages-September,Campaigns,Website,% of users clicking on to further pages,September,,31.47%,31.68%,30.0%
-Campaigns-Website-% of users clicking on to further pages-October,Campaigns,Website,% of users clicking on to further pages,October,,31.86%,31.68%,30.0%
-Campaigns-Website-% of users clicking on to further pages-November,Campaigns,Website,% of users clicking on to further pages,November,,32.34%,31.68%,30.0%
-Campaigns-Website-% of users clicking on to further pages-December,Campaigns,Website,% of users clicking on to further pages,December,,32.63%,31.68%,31.0%
-Campaigns-Website-% of users clicking to partner pages-January,Campaigns,Website,% of users clicking to partner pages,January,11.95%,11.00%,11.95%,11.0%
-Campaigns-Website-% of users clicking to partner pages-February,Campaigns,Website,% of users clicking to partner pages,February,11.75%,11.18%,11.85%,11.0%
-Campaigns-Website-% of users clicking to partner pages-March,Campaigns,Website,% of users clicking to partner pages,March,11.73%,11.36%,11.81%,11.0%
-Campaigns-Website-% of users clicking to partner pages-April,Campaigns,Website,% of users clicking to partner pages,April,11.08%,11.54%,11.63%,11.0%
-Campaigns-Website-% of users clicking to partner pages-May,Campaigns,Website,% of users clicking to partner pages,May,,11.72%,11.63%,11.0%
-Campaigns-Website-% of users clicking to partner pages-June,Campaigns,Website,% of users clicking to partner pages,June,,11.90%,11.63%,11.0%
-Campaigns-Website-% of users clicking to partner pages-July,Campaigns,Website,% of users clicking to partner pages,July,,12.09%,11.63%,12.0%
-Campaigns-Website-% of users clicking to partner pages-August,Campaigns,Website,% of users clicking to partner pages,August,,12.27%,11.63%,12.0%
-Campaigns-Website-% of users clicking to partner pages-September,Campaigns,Website,% of users clicking to partner pages,September,,12.45%,11.63%,12.0%
-Campaigns-Website-% of users clicking to partner pages-October,Campaigns,Website,% of users clicking to partner pages,October,,12.63%,11.63%,12.0%
-Campaigns-Website-% of users clicking to partner pages-November,Campaigns,Website,% of users clicking to partner pages,November,,12.81%,11.63%,12.0%
-Campaigns-Website-% of users clicking to partner pages-December,Campaigns,Website,% of users clicking to partner pages,December,,13.00%,11.63%,12.0%
-Campaigns-Website-Avg Session Duration-January,Campaigns,Website,Avg Session Duration,January,186,214,186,214
-Campaigns-Website-Avg Session Duration-February,Campaigns,Website,Avg Session Duration,February,157,219,171.5,216.5
-Campaigns-Website-Avg Session Duration-March,Campaigns,Website,Avg Session Duration,March,157,219,166.67,217.33
-Campaigns-Website-Avg Session Duration-April,Campaigns,Website,Avg Session Duration,April,162,173,165.5,206.25
-Campaigns-Website-Avg Session Duration-May,Campaigns,Website,Avg Session Duration,May,,79,165.5,183.8
-Campaigns-Website-Avg Session Duration-June,Campaigns,Website,Avg Session Duration,June,,83,165.5,164.5
-Campaigns-Website-Avg Session Duration-July,Campaigns,Website,Avg Session Duration,July,,134,165.5,160.29
-Campaigns-Website-Avg Session Duration-August,Campaigns,Website,Avg Session Duration,August,,75,165.5,149.25
-Campaigns-Website-Avg Session Duration-September,Campaigns,Website,Avg Session Duration,September,,209,165.5,155.33
-Campaigns-Website-Avg Session Duration-October,Campaigns,Website,Avg Session Duration,October,,221,165.5,162.3
-Campaigns-Website-Avg Session Duration-November,Campaigns,Website,Avg Session Duration,November,,200,165.5,166.36
-Campaigns-Website-Avg Session Duration-December,Campaigns,Website,Avg Session Duration,December,,240,165.5,172.17
-Campaigns-Website-Engagement Rate-January,Campaigns,Website,Engagement Rate,January,60.8%,60.0%,60.8%,60.0%
-Campaigns-Website-Engagement Rate-February,Campaigns,Website,Engagement Rate,February,58.2%,60.0%,59.5%,60.0%
-Campaigns-Website-Engagement Rate-March,Campaigns,Website,Engagement Rate,March,59.0%,60.0%,59.3%,60.0%
-Campaigns-Website-Engagement Rate-April,Campaigns,Website,Engagement Rate,April,61.2%,60.0%,59.8%,60.0%
-Campaigns-Website-Engagement Rate-May,Campaigns,Website,Engagement Rate,May,,60.0%,59.8%,60.0%
-Campaigns-Website-Engagement Rate-June,Campaigns,Website,Engagement Rate,June,,60.0%,59.8%,60.0%
-Campaigns-Website-Engagement Rate-July,Campaigns,Website,Engagement Rate,July,,60.0%,59.8%,60.0%
-Campaigns-Website-Engagement Rate-August,Campaigns,Website,Engagement Rate,August,,60.0%,59.8%,60.0%
-Campaigns-Website-Engagement Rate-September,Campaigns,Website,Engagement Rate,September,,60.0%,59.8%,60.0%
-Campaigns-Website-Engagement Rate-October,Campaigns,Website,Engagement Rate,October,,60.0%,59.8%,60.0%
-Campaigns-Website-Engagement Rate-November,Campaigns,Website,Engagement Rate,November,,60.0%,59.8%,60.0%
-Campaigns-Website-Engagement Rate-December,Campaigns,Website,Engagement Rate,December,,60.0%,59.8%,60.0%`;
+Campaigns-Website-Organic Total Sessions-January,Campaigns,Website,Organic Total Sessions,January,192312,265450,192312,265450
+Campaigns-Website-Organic Total Sessions-February,Campaigns,Website,Organic Total Sessions,February,163631,238697,355943,504147
+Campaigns-Website-Organic Total Sessions-March,Campaigns,Website,Organic Total Sessions,March,153650,166718,509593,670865
+Campaigns-Website-Organic Total Sessions-April,Campaigns,Website,Organic Total Sessions,April,148268,227768,657861,898633
+Campaigns-Website-Organic Total Sessions-May,Campaigns,Website,Organic Total Sessions,May,132356,175539,790217,1074172
+Campaigns-Website-Organic Total Sessions-June,Campaigns,Website,Organic Total Sessions,June,,144730,790217,1218902
+Campaigns-Website-Organic Total Sessions-July,Campaigns,Website,Organic Total Sessions,July,,134883,790217,1353785
+Campaigns-Website-Organic Total Sessions-August,Campaigns,Website,Organic Total Sessions,August,,119693,790217,1473478
+Campaigns-Website-Organic Total Sessions-September,Campaigns,Website,Organic Total Sessions,September,,137002,790217,1610480
+Campaigns-Website-Organic Total Sessions-October,Campaigns,Website,Organic Total Sessions,October,,178350,790217,1788830
+Campaigns-Website-Organic Total Sessions-November,Campaigns,Website,Organic Total Sessions,November,,205619,790217,1994449
+Campaigns-Website-Organic Total Sessions-December,Campaigns,Website,Organic Total Sessions,December,,244570,790217,2239019
+Campaigns-Website-Organic Total Users-January,Campaigns,Website,Organic Total Users,January,146530,201743,146530,201743
+Campaigns-Website-Organic Total Users-February,Campaigns,Website,Organic Total Users,February,124004,191859,270534,393602
+Campaigns-Website-Organic Total Users-March,Campaigns,Website,Organic Total Users,March,118344,127786,388878,521388
+Campaigns-Website-Organic Total Users-April,Campaigns,Website,Organic Total Users,April,115094,188354,503972,709742
+Campaigns-Website-Organic Total Users-May,Campaigns,Website,Organic Total Users,May,102950,142254,606922,851996
+Campaigns-Website-Organic Total Users-June,Campaigns,Website,Organic Total Users,June,,112959,606922,964955
+Campaigns-Website-Organic Total Users-July,Campaigns,Website,Organic Total Users,July,,108196,606922,1073151
+Campaigns-Website-Organic Total Users-August,Campaigns,Website,Organic Total Users,August,,104781,606922,1177932
+Campaigns-Website-Organic Total Users-September,Campaigns,Website,Organic Total Users,September,,111520,606922,1289452
+Campaigns-Website-Organic Total Users-October,Campaigns,Website,Organic Total Users,October,,143153,606922,1432605
+Campaigns-Website-Organic Total Users-November,Campaigns,Website,Organic Total Users,November,,160856,606922,1593461
+Campaigns-Website-Organic Total Users-December,Campaigns,Website,Organic Total Users,December,,185479,606922,1778940
+Campaigns-Website-% of users clicking on to further pages-January,Campaigns,Website,% of users clicking on to further pages,January,0.294,0.284,0.294,0.28
+Campaigns-Website-% of users clicking on to further pages-February,Campaigns,Website,% of users clicking on to further pages,February,0.313,0.2876,0.3035,0.29
+Campaigns-Website-% of users clicking on to further pages-March,Campaigns,Website,% of users clicking on to further pages,March,0.335,0.2915,0.314,0.29
+Campaigns-Website-% of users clicking on to further pages-April,Campaigns,Website,% of users clicking on to further pages,April,0.325,0.2954,0.3168,0.29
+Campaigns-Website-% of users clicking on to further pages-May,Campaigns,Website,% of users clicking on to further pages,May,0.309,0.2992,0.3152,0.29
+Campaigns-Website-% of users clicking on to further pages-June,Campaigns,Website,% of users clicking on to further pages,June,,0.3031,0.3152,0.29
+Campaigns-Website-% of users clicking on to further pages-July,Campaigns,Website,% of users clicking on to further pages,July,,0.307,0.3152,0.3
+Campaigns-Website-% of users clicking on to further pages-August,Campaigns,Website,% of users clicking on to further pages,August,,0.3108,0.3152,0.3
+Campaigns-Website-% of users clicking on to further pages-September,Campaigns,Website,% of users clicking on to further pages,September,,0.3147,0.3152,0.3
+Campaigns-Website-% of users clicking on to further pages-October,Campaigns,Website,% of users clicking on to further pages,October,,0.3186,0.3152,0.3
+Campaigns-Website-% of users clicking on to further pages-November,Campaigns,Website,% of users clicking on to further pages,November,,0.3234,0.3152,0.3
+Campaigns-Website-% of users clicking on to further pages-December,Campaigns,Website,% of users clicking on to further pages,December,,0.3263,0.3152,0.31
+Campaigns-Website-% of users clicking to partner pages-January,Campaigns,Website,% of users clicking to partner pages,January,0.1195,0.11,0.1195,0.11
+Campaigns-Website-% of users clicking to partner pages-February,Campaigns,Website,% of users clicking to partner pages,February,0.1175,0.1118,0.1185,0.11
+Campaigns-Website-% of users clicking to partner pages-March,Campaigns,Website,% of users clicking to partner pages,March,0.1173,0.1136,0.1181,0.11
+Campaigns-Website-% of users clicking to partner pages-April,Campaigns,Website,% of users clicking to partner pages,April,0.1108,0.1154,0.1163,0.11
+Campaigns-Website-% of users clicking to partner pages-May,Campaigns,Website,% of users clicking to partner pages,May,0.095,0.1172,0.112,0.11
+Campaigns-Website-% of users clicking to partner pages-June,Campaigns,Website,% of users clicking to partner pages,June,,0.119,0.112,0.11
+Campaigns-Website-% of users clicking to partner pages-July,Campaigns,Website,% of users clicking to partner pages,July,,0.1209,0.112,0.12
+Campaigns-Website-% of users clicking to partner pages-August,Campaigns,Website,% of users clicking to partner pages,August,,0.1227,0.112,0.12
+Campaigns-Website-% of users clicking to partner pages-September,Campaigns,Website,% of users clicking to partner pages,September,,0.1245,0.112,0.12
+Campaigns-Website-% of users clicking to partner pages-October,Campaigns,Website,% of users clicking to partner pages,October,,0.1263,0.112,0.12
+Campaigns-Website-% of users clicking to partner pages-November,Campaigns,Website,% of users clicking to partner pages,November,,0.1281,0.112,0.12
+Campaigns-Website-% of users clicking to partner pages-December,Campaigns,Website,% of users clicking to partner pages,December,,0.13,0.112,0.12`;
     </script>
     
     <!-- Tab functionality -->
