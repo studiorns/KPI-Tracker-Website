@@ -179,8 +179,10 @@
         
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
             gap: 24px;
+            max-width: 100%;
         }
         
         .metric-card {
@@ -730,7 +732,7 @@
             <div class="section-content">
             <div class="insight-summary">
                 <h3><i class="fas fa-lightbulb"></i> Key Insights</h3>
-                <p>Website metrics show mixed performance through June 2025, with continued traffic challenges but strong engagement quality. YTD Organic Total Sessions reached 890,940 vs 1,218,902 forecast (73.1% achievement), while YTD Organic Total Users remained at 606,922 vs 964,955 forecast (62.9% achievement - no June data available). User engagement metrics continue to excel with % of users clicking further pages at 31.28% YTD vs 29.35% forecast (106.6% achievement) and % of users clicking partner pages at 10.94% YTD vs 11.45% forecast (95.5% achievement). June showed significant traffic decline with organic sessions at 69.6% of forecast (100,723 vs 144,730) but engagement quality remained solid with clicking further pages at 99.3% of forecast (30.1% vs 30.31%) and newsletter subscriptions exceeding expectations at 116.3% of forecast (0.05% vs 0.043%). Corporate website engagement rate maintained strong performance at 106.4% of forecast (63.84% vs 60%).</p>
+                <p>Website performance through June 2025 shows mixed results across the 5 core KPIs. Traffic metrics face challenges with Organic Total Sessions at 73.1% YTD achievement (890,940 vs 1,218,902 forecast) and Corporate Total Sessions at 19.3% YTD achievement (235,151 vs 1,218,902 forecast). However, engagement quality remains strong with Corporate Engagement Rate exceeding expectations at 114.3% YTD achievement (68.6% vs 60% forecast) and % of users clicking further pages performing well at 106.6% YTD achievement (31.28% vs 29.35% forecast). Corporate Pageviews achieved 86.7% of YTD forecast (403,805 vs 465,877.5 forecast). June specifically showed continued traffic decline but maintained engagement quality, indicating that while fewer users are visiting, those who do are highly engaged with the content.</p>
             </div>
             
             <div class="metrics-grid" id="metrics-container">
@@ -754,21 +756,15 @@
             
             <div class="tab-container">
                 <div class="tab-buttons">
-                    <button class="tab-btn active" data-tab="total-organic-sessions">Total Organic Sessions</button>
-                    <button class="tab-btn" data-tab="organic-total-users">Organic Total Users</button>
-                    <button class="tab-btn" data-tab="users-clicking-further">% Users Clicking Further</button>
-                    <button class="tab-btn" data-tab="users-clicking-partner">% Users Clicking Partner</button>
+                    <button class="tab-btn active" data-tab="organic-sessions">Organic Sessions</button>
+                    <button class="tab-btn" data-tab="users-clicking-further">Users Clicking Further</button>
+                    <button class="tab-btn" data-tab="users-clicking-partner">Users Clicking Partner</button>
+                    <button class="tab-btn" data-tab="users-subscribing-newsletters">Newsletter Subscriptions</button>
                 </div>
                 
-                <div class="tab-content active" id="total-organic-sessions-tab">
+                <div class="tab-content active" id="organic-sessions-tab">
                     <div class="chart-container">
-                        <canvas id="total-organic-sessions-trend-chart" data-lazy="true"></canvas>
-                    </div>
-                </div>
-                
-                <div class="tab-content" id="organic-total-users-tab">
-                    <div class="chart-container">
-                        <canvas id="organic-total-users-trend-chart" data-lazy="true"></canvas>
+                        <canvas id="organic-sessions-trend-chart" data-lazy="true"></canvas>
                     </div>
                 </div>
                 
@@ -781,6 +777,12 @@
                 <div class="tab-content" id="users-clicking-partner-tab">
                     <div class="chart-container">
                         <canvas id="users-clicking-partner-trend-chart" data-lazy="true"></canvas>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="users-subscribing-newsletters-tab">
+                    <div class="chart-container">
+                        <canvas id="users-subscribing-newsletters-trend-chart" data-lazy="true"></canvas>
                     </div>
                 </div>
                 
@@ -817,21 +819,21 @@
                 </div>
                 
                 <div class="tab-content active" id="website-tab">
-                    <h3>Website Performance</h3>
+                    <h3>Campaigns Website KPIs</h3>
                     <div class="charts-row">
                         <div class="chart-container">
-                            <canvas id="initiative-cards-website-total-organic-sessions-chart" data-lazy="true"></canvas>
+                            <canvas id="campaigns-website-organic-total-sessions-chart" data-lazy="true"></canvas>
                         </div>
                         <div class="chart-container">
-                            <canvas id="initiative-cards-website-organic-total-users-chart" data-lazy="true"></canvas>
+                            <canvas id="campaigns-website-users-clicking-further-chart" data-lazy="true"></canvas>
                         </div>
                     </div>
                     <div class="charts-row">
                         <div class="chart-container">
-                            <canvas id="initiative-cards-website-users-clicking-further-chart" data-lazy="true"></canvas>
+                            <canvas id="campaigns-website-users-clicking-partner-chart" data-lazy="true"></canvas>
                         </div>
                         <div class="chart-container">
-                            <canvas id="initiative-cards-website-users-clicking-partner-chart" data-lazy="true"></canvas>
+                            <canvas id="campaigns-website-users-subscribing-newsletters-chart" data-lazy="true"></canvas>
                         </div>
                     </div>
                 </div>
@@ -866,18 +868,6 @@ Campaigns-Website-Organic Total Sessions-September,Campaigns,Website,Organic Tot
 Campaigns-Website-Organic Total Sessions-October,Campaigns,Website,Organic Total Sessions,October,0,178350,890940,1788830
 Campaigns-Website-Organic Total Sessions-November,Campaigns,Website,Organic Total Sessions,November,0,205619,890940,1994449
 Campaigns-Website-Organic Total Sessions-December,Campaigns,Website,Organic Total Sessions,December,0,244570,890940,2239019
-Campaigns-Website-Organic Total Users-January,Campaigns,Website,Organic Total Users,January,146530,201743,146530,201743
-Campaigns-Website-Organic Total Users-February,Campaigns,Website,Organic Total Users,February,124004,191859,270534,393602
-Campaigns-Website-Organic Total Users-March,Campaigns,Website,Organic Total Users,March,118344,127786,388878,521388
-Campaigns-Website-Organic Total Users-April,Campaigns,Website,Organic Total Users,April,115094,188354,503972,709742
-Campaigns-Website-Organic Total Users-May,Campaigns,Website,Organic Total Users,May,102950,142254,606922,851996
-Campaigns-Website-Organic Total Users-June,Campaigns,Website,Organic Total Users,June,0,112959,606922,964955
-Campaigns-Website-Organic Total Users-July,Campaigns,Website,Organic Total Users,July,0,108196,606922,1073151
-Campaigns-Website-Organic Total Users-August,Campaigns,Website,Organic Total Users,August,0,104781,606922,1177932
-Campaigns-Website-Organic Total Users-September,Campaigns,Website,Organic Total Users,September,0,111520,606922,1289452
-Campaigns-Website-Organic Total Users-October,Campaigns,Website,Organic Total Users,October,0,143153,606922,1432605
-Campaigns-Website-Organic Total Users-November,Campaigns,Website,Organic Total Users,November,0,160856,606922,1593461
-Campaigns-Website-Organic Total Users-December,Campaigns,Website,Organic Total Users,December,0,185479,606922,1778940
 Campaigns-Website-% of users clicking on to further pages-January,Campaigns,Website,% of users clicking on to further pages,January,0.294,0.284,0.294,0.284
 Campaigns-Website-% of users clicking on to further pages-February,Campaigns,Website,% of users clicking on to further pages,February,0.313,0.2876,0.3035,0.2858
 Campaigns-Website-% of users clicking on to further pages-March,Campaigns,Website,% of users clicking on to further pages,March,0.335,0.2915,0.314,0.2877
@@ -938,18 +928,6 @@ Corporate-Website-Pageviews-September,Corporate,Website,Pageviews,September,0,10
 Corporate-Website-Pageviews-October,Corporate,Website,Pageviews,October,0,94570.3,403805,800846.2
 Corporate-Website-Pageviews-November,Corporate,Website,Pageviews,November,0,0,403805,800846.2
 Corporate-Website-Pageviews-December,Corporate,Website,Pageviews,December,0,0,403805,800846.2
-Corporate-Website-Avg Session Duration-January,Corporate,Website,Avg Session Duration,January,100,109,100,109
-Corporate-Website-Avg Session Duration-February,Corporate,Website,Avg Session Duration,February,97,108,197,217
-Corporate-Website-Avg Session Duration-March,Corporate,Website,Avg Session Duration,March,67,189,264,406
-Corporate-Website-Avg Session Duration-April,Corporate,Website,Avg Session Duration,April,56,88,320,494
-Corporate-Website-Avg Session Duration-May,Corporate,Website,Avg Session Duration,May,67,175,387,669
-Corporate-Website-Avg Session Duration-June,Corporate,Website,Avg Session Duration,June,90,191,477,860
-Corporate-Website-Avg Session Duration-July,Corporate,Website,Avg Session Duration,July,0,189,477,1049
-Corporate-Website-Avg Session Duration-August,Corporate,Website,Avg Session Duration,August,0,193,477,1242
-Corporate-Website-Avg Session Duration-September,Corporate,Website,Avg Session Duration,September,0,184,477,1426
-Corporate-Website-Avg Session Duration-October,Corporate,Website,Avg Session Duration,October,0,195,477,1621
-Corporate-Website-Avg Session Duration-November,Corporate,Website,Avg Session Duration,November,0,0,477,1621
-Corporate-Website-Avg Session Duration-December,Corporate,Website,Avg Session Duration,December,0,0,477,1621
 Corporate-Website-Engagement Rate-January,Corporate,Website,Engagement Rate,January,0.643,0.6,0.643,0.6
 Corporate-Website-Engagement Rate-February,Corporate,Website,Engagement Rate,February,0.6215,0.6,0.63225,0.6
 Corporate-Website-Engagement Rate-March,Corporate,Website,Engagement Rate,March,0.73,0.6,0.664833,0.6
@@ -1026,8 +1004,6 @@ Corporate-Website-Engagement Rate-December,Corporate,Website,Engagement Rate,Dec
     
     <!-- Load JavaScript files -->
     <script src="Website.js"></script>
-    <script src="populateMetricCards.js"></script>
-    <script src="createCharts.js"></script>
     <script src="collapsible.js"></script>
     
     <!-- Initialize dashboard -->
