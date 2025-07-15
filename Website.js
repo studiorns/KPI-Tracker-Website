@@ -255,13 +255,6 @@ function calculateTotals(data) {
       ytdForecast: {},
       momChange: {}
     },
-    'Organic Total Users': {
-      actual: {},
-      forecast: {},
-      ytdActual: {},
-      ytdForecast: {},
-      momChange: {}
-    },
     '% of users clicking on to further pages': {
       actual: {},
       forecast: {},
@@ -276,14 +269,7 @@ function calculateTotals(data) {
       ytdForecast: {},
       momChange: {}
     },
-    'Avg Session Duration': {
-      actual: {},
-      forecast: {},
-      ytdActual: {},
-      ytdForecast: {},
-      momChange: {}
-    },
-    'Engagement Rate': {
+    '% of users subscribing to newsletters': {
       actual: {},
       forecast: {},
       ytdActual: {},
@@ -430,8 +416,9 @@ function formatNumber(number, metric) {
   // Handle percentage values (Engagement Rate and other percentage metrics)
   if (metric === 'Engagement Rate' || 
       metric === '% of users clicking on to further pages' || 
-      metric === '% of users clicking to partner pages') {
-    return (number * 100).toFixed(1) + '%';
+      metric === '% of users clicking to partner pages' ||
+      metric === '% of users subscribing to newsletters') {
+    return (number * 100).toFixed(3) + '%';
   }
   
   // Handle time values (Avg Session Duration)
@@ -617,16 +604,16 @@ function createActualVsForecastChart(canvasId, data, initiative, subInitiative, 
     
     const metricData = data.structured[initiative][subInitiative][metric];
     
-    // Get all months with data (only Q1 months)
+    // Get all months with data (January through June)
     const allMonths = Object.keys(metricData.actual);
     console.log(`All months in data: ${allMonths.join(', ')}`);
     
-    // Filter for January through April months
-    const displayMonths = ['January', 'February', 'March', 'April'];
+    // Filter for January through June months
+    const displayMonths = ['January', 'February', 'March', 'April', 'May', 'June'];
     const months = allMonths.filter(month => displayMonths.includes(month));
     
     if (months.length === 0) {
-      console.warn(`No Q1 monthly data found for ${initiative} - ${subInitiative} - ${metric}`);
+      console.warn(`No monthly data found for ${initiative} - ${subInitiative} - ${metric}`);
     }
     
     // Sort months chronologically
@@ -652,9 +639,10 @@ function createActualVsForecastChart(canvasId, data, initiative, subInitiative, 
     
     // Define specific colors for each metric for consistency
     const metricColors = {
+      'Organic Total Sessions': CHART_COLORS.lightBlue,
       'Total Sessions': CHART_COLORS.blue,
       'Pageviews': CHART_COLORS.purple,
-      'Avg Session Duration': CHART_COLORS.orange,
+      '% of users clicking on to further pages': CHART_COLORS.orange,
       'Engagement Rate': CHART_COLORS.green
     };
     
@@ -675,6 +663,11 @@ function createActualVsForecastChart(canvasId, data, initiative, subInitiative, 
         return (value * 100).toFixed(1) + '%';
       };
       baseChartOptions.scales.y.max = 0.4; // 40% (adjust based on data range)
+    } else if (metric === '% of users subscribing to newsletters') {
+      baseChartOptions.scales.y.ticks.callback = function(value) {
+        return (value * 100).toFixed(3) + '%';
+      };
+      baseChartOptions.scales.y.max = 0.002; // 0.2% (appropriate for newsletter data)
     } else if (metric === 'Avg Session Duration') {
       baseChartOptions.scales.y.ticks.callback = function(value) {
         const minutes = Math.floor(value / 60);
@@ -845,44 +838,95 @@ function createActualVsForecastChart(canvasId, data, initiative, subInitiative, 
 
 // Create monthly trend chart
 function createMonthlyTrendChart(canvasId, data, metric) {
-  const ctx = document.getElementById(canvasId).getContext('2d');
+  try {
+    console.log(`Creating monthly trend chart for ${metric}...`);
+    console.log(`Chart ID: ${canvasId}`);
+    
+    // Get canvas element
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+      console.error(`Canvas element with ID '${canvasId}' not found`);
+      return null;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error(`Failed to get 2D context for canvas '${canvasId}'`);
+      return null;
+    }
   
   const months = MONTHS.slice(0, 6); // January through June
   const datasets = [];
   
-  // Define specific colors for each sub-initiative for consistency
-  const subInitiativeColors = {
-    'Website': CHART_COLORS.blue
+  // Define specific colors for each metric for consistency
+  const metricColors = {
+    'Organic Total Sessions': CHART_COLORS.lightBlue,
+    '% of users clicking on to further pages': CHART_COLORS.orange,
+    '% of users clicking to partner pages': CHART_COLORS.yellow,
+    '% of users subscribing to newsletters': CHART_COLORS.red
   };
   
-  data.subInitiatives.forEach((subInitiative, index) => {
+  // For the Website dashboard, we specifically look for Campaigns-Website data
+  const initiative = 'Campaigns';
+  const subInitiative = 'Website';
+  
+  console.log(`Looking for data: ${initiative} - ${subInitiative} - ${metric}`);
+  
+  // Check if the data structure exists
+  if (data.structured && 
+      data.structured[initiative] && 
+      data.structured[initiative][subInitiative] && 
+      data.structured[initiative][subInitiative][metric]) {
+    
+    const metricData = data.structured[initiative][subInitiative][metric];
     const subInitiativeData = [];
     
-    // Find the initiative that contains this sub-initiative
-    const initiative = data.initiatives.find(init => 
-      Object.keys(data.structured[init]).includes(subInitiative)
-    );
+    // Extract data for each month
+    months.forEach(month => {
+      const value = metricData.actual[month] || 0;
+      subInitiativeData.push(value);
+      console.log(`${month}: ${value}`);
+    });
     
-    if (initiative && data.structured[initiative][subInitiative][metric]) {
-      months.forEach(month => {
-        subInitiativeData.push(data.structured[initiative][subInitiative][metric].actual[month] || 0);
-      });
-      
-      // Use the predefined color for this sub-initiative or fall back to a color from the palette
-      const color = subInitiativeColors[subInitiative] || Object.values(CHART_COLORS)[index % Object.keys(CHART_COLORS).length];
-      
-      datasets.push({
-        label: subInitiative,
-        data: subInitiativeData,
-        borderColor: color,
-        backgroundColor: color.replace('1)', '0.2)'), // Add transparency for fill
-        borderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        fill: true // Enable area fill for better visualization
-      });
-    }
-  });
+    // Use the predefined color for this metric
+    const color = metricColors[metric] || CHART_COLORS.blue;
+    
+    datasets.push({
+      label: `${subInitiative} - ${metric}`,
+      data: subInitiativeData,
+      borderColor: color,
+      backgroundColor: color.replace('1)', '0.2)'), // Add transparency for fill
+      borderWidth: 3,
+      pointRadius: 5,
+      pointHoverRadius: 7,
+      fill: true // Enable area fill for better visualization
+    });
+    
+    console.log(`Successfully created dataset for ${metric}:`, subInitiativeData);
+  } else {
+    console.error(`Data not found for ${initiative} - ${subInitiative} - ${metric}`);
+    console.log('Available data structure:', {
+      hasStructured: !!data.structured,
+      hasInitiative: !!(data.structured && data.structured[initiative]),
+      hasSubInitiative: !!(data.structured && data.structured[initiative] && data.structured[initiative][subInitiative]),
+      availableMetrics: data.structured && data.structured[initiative] && data.structured[initiative][subInitiative] 
+        ? Object.keys(data.structured[initiative][subInitiative]) 
+        : 'No metrics available'
+    });
+    
+    // Create empty dataset to show chart structure
+    datasets.push({
+      label: `${metric} (No Data)`,
+      data: [0, 0, 0, 0, 0, 0],
+      borderColor: CHART_COLORS.gray,
+      backgroundColor: CHART_COLORS.gray.replace('1)', '0.1)'),
+      borderWidth: 2,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      fill: false,
+      borderDash: [5, 5] // Dashed line to indicate no data
+    });
+  }
   
   // Create chart options based on the metric
   const chartOptions = { ...commonChartOptions };
@@ -939,7 +983,12 @@ function createMonthlyTrendChart(canvasId, data, metric) {
     }
   });
   
+  console.log(`Successfully created monthly trend chart for ${metric}`);
   return chart;
+  } catch (error) {
+    console.error(`Error creating monthly trend chart for ${metric}:`, error);
+    return null;
+  }
 }
 
 // Create YTD achievement chart
@@ -967,7 +1016,15 @@ function createYTDAchievementChart(canvasId, data, ytdAchievement) {
       
       console.log(`Processing ${subInitiative} under initiative ${initiative}:`);
       
-      data.metrics.forEach(metric => {
+      // Use only the 4 Campaigns metrics we want to display
+      const campaignMetrics = [
+        'Organic Total Sessions',
+        '% of users clicking on to further pages',
+        '% of users clicking to partner pages',
+        '% of users subscribing to newsletters'
+      ];
+      
+      campaignMetrics.forEach(metric => {
         if (data.structured[initiative][subInitiative][metric] && 
             ytdAchievement[initiative][subInitiative][metric][latestMonth]) {
           const achievementValue = ytdAchievement[initiative][subInitiative][metric][latestMonth];
@@ -997,10 +1054,18 @@ function createYTDAchievementChart(canvasId, data, ytdAchievement) {
     }
   });
   
+  // Use only the 4 Campaigns metrics for labels
+  const campaignMetrics = [
+    'Organic Total Sessions',
+    '% of users clicking on to further pages',
+    '% of users clicking to partner pages',
+    '% of users subscribing to newsletters'
+  ];
+  
   const chart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: data.metrics,
+      labels: campaignMetrics,
       datasets: datasets
     },
     options: {
@@ -1109,6 +1174,311 @@ function displayErrorMessage(ctx, canvas, message) {
   ctx.fillText('Check console for more details', canvas.width / 2, canvas.height / 2 + 40);
   
   console.error(`Chart error: ${message}`);
+}
+
+/**
+ * Creates total metric cards for the 4 core website KPIs
+ */
+function createTotalMetricCards() {
+  try {
+    console.log('Creating total metric cards...');
+    
+    // Get the total metrics container
+    const totalMetricsContainer = document.getElementById('total-metrics-container');
+    if (!totalMetricsContainer) {
+      console.error("Element with ID 'total-metrics-container' not found");
+      return;
+    }
+    
+    // Clear existing cards
+    totalMetricsContainer.innerHTML = '';
+    
+    // Define the 4 Campaigns metrics to display
+    const metricsToDisplay = [
+      'Organic Total Sessions',
+      '% of users clicking on to further pages',
+      '% of users clicking to partner pages',
+      '% of users subscribing to newsletters'
+    ];
+    
+    // Create cards for each metric
+    metricsToDisplay.forEach(metric => {
+      try {
+        console.log(`Creating total card for ${metric}...`);
+        
+        if (!totalMetrics[metric]) {
+          console.warn(`No total data found for metric: ${metric}`);
+          return;
+        }
+        
+        // Get actual and forecast values for the latest month
+        const actual = totalMetrics[metric].actual[LATEST_MONTH] || 0;
+        const forecast = totalMetrics[metric].forecast[LATEST_MONTH] || 0;
+        
+        // Get YTD actual and forecast values
+        const ytdActual = totalMetrics[metric].ytdActual[LATEST_MONTH] || 0;
+        const ytdForecast = totalMetrics[metric].ytdForecast[LATEST_MONTH] || 0;
+        
+        // Calculate variance and achievement percentage
+        const variance = actual - forecast;
+        const variancePercent = forecast !== 0 ? (variance / forecast) * 100 : 0;
+        const achievement = ytdForecast !== 0 ? (ytdActual / ytdForecast) * 100 : 0;
+        
+        // Get MoM change
+        const momChange = totalMetrics[metric].momChange[LATEST_MONTH] || 0;
+        
+        // Create card element
+        const card = document.createElement('div');
+        card.className = 'metric-card total-metric-card';
+        
+        // Determine status classes based on performance
+        const varianceClass = variancePercent >= 0 ? 'positive' : 'negative';
+        const achievementClass = achievement >= 100 ? 'positive' : achievement >= 90 ? 'warning' : 'negative';
+        const momClass = momChange >= 0 ? 'positive' : 'negative';
+        
+        // Define icons for each metric
+        const metricIcons = {
+          'Organic Total Sessions': 'fa-search',
+          'Total Sessions': 'fa-users',
+          'Pageviews': 'fa-eye',
+          '% of users clicking on to further pages': 'fa-hand-pointer',
+          '% of users clicking to partner pages': 'fa-handshake',
+          '% of users subscribing to newsletters': 'fa-envelope',
+          'Engagement Rate': 'fa-heart'
+        };
+        
+        // Create card content
+        card.innerHTML = `
+          <div class="metric-name"><i class="fas ${metricIcons[metric] || 'fa-chart-line'}"></i> ${metric}</div>
+          <div class="metric-value">${formatNumber(actual, metric)}</div>
+          <div class="metric-stats">
+            <div class="metric-stat">
+              <span class="stat-label">vs Forecast:</span>
+              <span class="stat-value ${varianceClass}">
+                ${variancePercent >= 0 ? '+' : ''}${variancePercent.toFixed(1)}%
+              </span>
+            </div>
+            <div class="metric-stat">
+              <span class="stat-label">MoM:</span>
+              <span class="stat-value ${momClass}">
+                ${momChange >= 0 ? '+' : ''}${momChange.toFixed(1)}%
+              </span>
+            </div>
+            <div class="metric-stat">
+              <span class="stat-label">YTD Achievement:</span>
+              <span class="stat-value ${achievementClass}">
+                ${achievement.toFixed(1)}%
+              </span>
+            </div>
+          </div>
+        `;
+        
+        // Add card to container
+        totalMetricsContainer.appendChild(card);
+        console.log(`Successfully created total card for ${metric}`);
+      } catch (error) {
+        console.error(`Error creating total card for ${metric}:`, error);
+      }
+    });
+    
+    console.log('Total metric cards created successfully');
+  } catch (error) {
+    console.error('Error in createTotalMetricCards function:', error);
+    throw new Error(`Failed to create total metric cards: ${error.message}`);
+  }
+}
+
+/**
+ * Populates the metrics container with cards for each initiative, sub-initiative, metric combination
+ */
+function populateMetricCards() {
+  try {
+    console.log('Starting to populate metric cards...');
+    
+    // Get metrics container
+    const metricsContainer = document.getElementById(METRICS_CONTAINER_ID);
+    if (!metricsContainer) {
+      console.error(`Element with ID '${METRICS_CONTAINER_ID}' not found`);
+      return;
+    }
+    
+    // Clear existing cards
+    metricsContainer.innerHTML = '';
+    
+    // Log data structure for debugging
+    console.log('Dashboard data structure:', dashboardData);
+    
+    // Create cards for each initiative, sub-initiative, metric combination
+    let cardCount = 0;
+    
+    // Filter to only show Campaigns Website metrics (the 4 relevant KPIs)
+    const relevantInitiative = 'Campaigns';
+    const relevantSubInitiative = 'Website';
+    const relevantMetrics = [
+      'Organic Total Sessions',
+      '% of users clicking on to further pages',
+      '% of users clicking to partner pages',
+      '% of users subscribing to newsletters'
+    ];
+    
+    console.log(`Processing only relevant metrics for ${relevantInitiative} - ${relevantSubInitiative}`);
+    
+    if (!dashboardData.structured[relevantInitiative]) {
+      console.warn(`No structured data found for initiative: ${relevantInitiative}`);
+      return;
+    }
+    
+    if (!dashboardData.structured[relevantInitiative][relevantSubInitiative]) {
+      console.warn(`No data found for sub-initiative: ${relevantSubInitiative}`);
+      return;
+    }
+    
+    relevantMetrics.forEach(metric => {
+      if (!dashboardData.structured[relevantInitiative][relevantSubInitiative][metric]) {
+        console.warn(`No data found for metric: ${metric}`);
+        return;
+      }
+      
+      try {
+        console.log(`Creating card for ${relevantInitiative} - ${relevantSubInitiative} - ${metric}`);
+        
+        const metricData = dashboardData.structured[relevantInitiative][relevantSubInitiative][metric];
+        if (!metricData) {
+          console.warn(`No data found for metric: ${metric}`);
+          return;
+        }
+        
+        // Get actual and forecast values for the latest month
+        const actual = metricData.actual[LATEST_MONTH] || 0;
+        const forecast = metricData.forecast[LATEST_MONTH] || 0;
+        
+        // Get YTD actual and forecast values
+        const ytdActual = metricData.ytdActual[LATEST_MONTH] || 0;
+        const ytdForecast = metricData.ytdForecast[LATEST_MONTH] || 0;
+        
+        // Calculate variance and achievement percentage
+        const variance = actual - forecast;
+        const variancePercent = forecast !== 0 ? (variance / forecast) * 100 : 0;
+        const achievement = ytdForecast !== 0 ? (ytdActual / ytdForecast) * 100 : 0;
+        
+        // Get MoM change
+        if (!momChanges[relevantInitiative]) {
+          console.warn(`No MoM changes found for initiative: ${relevantInitiative}`);
+          return;
+        }
+        
+        if (!momChanges[relevantInitiative][relevantSubInitiative]) {
+          console.warn(`No MoM changes found for sub-initiative: ${relevantSubInitiative}`);
+          return;
+        }
+        
+        if (!momChanges[relevantInitiative][relevantSubInitiative][metric]) {
+          console.warn(`No MoM changes found for metric: ${metric}`);
+          return;
+        }
+        
+        const momChange = momChanges[relevantInitiative][relevantSubInitiative][metric][LATEST_MONTH] || 0;
+        
+        // Create card element
+        const card = document.createElement('div');
+        card.className = 'metric-card';
+        
+        // Determine status classes based on performance
+        const varianceClass = variancePercent >= 0 ? 'positive' : 'negative';
+        const achievementClass = achievement >= 100 ? 'positive' : achievement >= 90 ? 'warning' : 'negative';
+        const momClass = momChange >= 0 ? 'positive' : 'negative';
+        
+        // Create card content
+        card.innerHTML = `
+          <div class="metric-name"><i class="fas fa-chart-line"></i> ${relevantSubInitiative} - ${metric}</div>
+          <div class="metric-value">${formatNumber(actual, metric)}</div>
+          <div class="metric-stats">
+            <div class="metric-stat">
+              <span class="stat-label">vs Forecast:</span>
+              <span class="stat-value ${varianceClass}">
+                ${variancePercent >= 0 ? '+' : ''}${variancePercent.toFixed(1)}%
+              </span>
+            </div>
+            <div class="metric-stat">
+              <span class="stat-label">MoM:</span>
+              <span class="stat-value ${momClass}">
+                ${momChange >= 0 ? '+' : ''}${momChange.toFixed(1)}%
+              </span>
+            </div>
+            <div class="metric-stat">
+              <span class="stat-label">YTD Achievement:</span>
+              <span class="stat-value ${achievementClass}">
+                ${achievement.toFixed(1)}%
+              </span>
+            </div>
+          </div>
+        `;
+        
+        // Add card to container
+        metricsContainer.appendChild(card);
+        cardCount++;
+      } catch (error) {
+        console.error(`Error creating card for ${relevantInitiative} - ${relevantSubInitiative} - ${metric}:`, error);
+      }
+    });
+    
+    console.log(`Successfully created ${cardCount} relevant metric cards`);
+    
+    // If no cards were created, show a message
+    if (cardCount === 0) {
+      metricsContainer.innerHTML = `
+        <div class="metric-card">
+          <div class="metric-name"><i class="fas fa-info-circle"></i> No Data</div>
+          <div class="metric-value">No metrics available</div>
+          <div class="metric-stats">
+            <div class="metric-stat">
+              <span class="stat-label">Please check the data source.</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  } catch (error) {
+    console.error('Error in populateMetricCards function:', error);
+    throw new Error(`Failed to populate metric cards: ${error.message}`);
+  }
+}
+
+/**
+ * Creates charts for the dashboard
+ */
+function createCharts() {
+  console.log('Creating charts...');
+  
+  try {
+    // Create monthly trend charts for the 4 Campaigns metrics
+    createMonthlyTrendChart('organic-sessions-trend-chart', dashboardData, 'Organic Total Sessions');
+    createMonthlyTrendChart('users-clicking-further-trend-chart', dashboardData, '% of users clicking on to further pages');
+    createMonthlyTrendChart('users-clicking-partner-trend-chart', dashboardData, '% of users clicking to partner pages');
+    createMonthlyTrendChart('users-subscribing-newsletters-trend-chart', dashboardData, '% of users subscribing to newsletters');
+    
+    // Create YTD achievement chart
+    createYTDAchievementChart('ytd-achievement-chart', dashboardData, ytdAchievement);
+    
+    // Create individual initiative charts for the 4 Campaigns metrics
+    createActualVsForecastChart('campaigns-website-organic-total-sessions-chart', dashboardData, 'Campaigns', 'Website', 'Organic Total Sessions');
+    createActualVsForecastChart('campaigns-website-users-clicking-further-chart', dashboardData, 'Campaigns', 'Website', '% of users clicking on to further pages');
+    createActualVsForecastChart('campaigns-website-users-clicking-partner-chart', dashboardData, 'Campaigns', 'Website', '% of users clicking to partner pages');
+    createActualVsForecastChart('campaigns-website-users-subscribing-newsletters-chart', dashboardData, 'Campaigns', 'Website', '% of users subscribing to newsletters');
+    
+    console.log('All charts created successfully');
+  } catch (error) {
+    console.error('Error creating charts:', error);
+  }
+}
+
+/**
+ * Adds event listeners for dashboard interactivity
+ */
+function addEventListeners() {
+  console.log('Adding event listeners...');
+  // This function would be implemented to add interactivity
+  // For now, it's a placeholder
 }
 
 // Initialize dashboard
